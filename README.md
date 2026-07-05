@@ -1,32 +1,57 @@
-# React + TypeScript + Vite
+# FoodBuddy
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+FoodBuddy is a mobile app that scans packaged food (barcode → Open Food Facts + label data) and turns it into a deterministic health score plus a personal **Safe / Caution / Avoid** verdict based on your allergies and dietary profile. All scoring and verdict logic is deterministic TypeScript running on-device — AI is only used to *explain* results in plain language, never to compute them.
 
-Currently, two official plugins are available:
+> **Disclaimer:** FoodBuddy is informational only and is **not medical advice**. Scores and verdicts can be wrong or based on incomplete product data. If you have an allergy or medical dietary requirement, **always check the physical product label** before eating.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+| Layer | Tech |
+|---|---|
+| UI | React 19, TanStack Router, Tailwind CSS 4 |
+| State/data | Zustand, TanStack Query, Zod |
+| Native shell | Capacitor 8 (Android + iOS) |
+| Backend | Supabase (Postgres, Auth, Edge Functions) |
+| Build | Vite 8, TypeScript |
+| Lint/test | oxlint, Vitest + Testing Library |
+| Observability | Sentry, PostHog (EU) |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Quickstart
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```powershell
+npm install
+Copy-Item .env.example .env   # then fill in the values
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Native workflow
+
+```powershell
+npm run build
+npx cap sync
+```
+
+- **Android:** `npx cap open android` — requires JDK 21 + Android Studio. **Not currently installed on this dev machine**; use the `Android Debug APK` GitHub Actions workflow to get a debug build in the meantime.
+- **iOS:** open `ios/App` in Xcode — requires macOS (or a cloud build service); cannot be built on Windows.
+
+## Testing
+
+```powershell
+npm run typecheck   # tsc -b
+npm run lint        # oxlint
+npm run test        # vitest run
+```
+
+The allergen test matrix (allergen detection + verdict edge cases) is a release gate — it must pass before any release.
+
+## Project docs
+
+Product and phase-plan docs live outside this repo in `../FoodInsight Mobile App/FoodInsight Mobile Development/`:
+
+- `FoodBuddy-PRD-v2.md`
+- `FoodBuddy-Implementation-Plan-v2.md`
+- `FoodBuddy-Modernization-Report.md`
+
+## Data attribution
+
+Product data comes from [Open Food Facts](https://world.openfoodfacts.org/), available under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). Any redistribution of that data must retain this attribution and comply with ODbL share-alike terms.

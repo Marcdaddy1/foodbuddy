@@ -1,0 +1,533 @@
+/**
+ * Placeholder — regenerate with
+ * `npx supabase gen types typescript --local > src/lib/database.types.ts`
+ * once the local/cloud project is running.
+ *
+ * Hand-written to match supabase/migrations/0001_initial_schema.sql exactly,
+ * in the standard `supabase gen types typescript` output shape.
+ */
+
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export interface Database {
+  public: {
+    Tables: {
+      app_config: {
+        Row: {
+          key: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      dietary_profiles: {
+        Row: {
+          allergies: Json
+          consent_given_at: string | null
+          created_at: string
+          custom_avoid_list: string[]
+          diet_patterns: string[]
+          intolerances: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allergies?: Json
+          consent_given_at?: string | null
+          created_at?: string
+          custom_avoid_list?: string[]
+          diet_patterns?: string[]
+          intolerances?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allergies?: Json
+          consent_given_at?: string | null
+          created_at?: string
+          custom_avoid_list?: string[]
+          diet_patterns?: string[]
+          intolerances?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dietary_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ingredient_explanations: {
+        Row: {
+          created_at: string
+          explanation: Json
+          id: string
+          ingredient_id: string
+          locale: string
+          model: string | null
+          prompt_version: string
+        }
+        Insert: {
+          created_at?: string
+          explanation: Json
+          id?: string
+          ingredient_id: string
+          locale?: string
+          model?: string | null
+          prompt_version: string
+        }
+        Update: {
+          created_at?: string
+          explanation?: Json
+          id?: string
+          ingredient_id?: string
+          locale?: string
+          model?: string | null
+          prompt_version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ingredient_explanations_ingredient_id_fkey"
+            columns: ["ingredient_id"]
+            isOneToOne: false
+            referencedRelation: "ingredients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ingredients: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          off_taxonomy_id: string | null
+          parent_allergens: string[]
+          risk_class: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          off_taxonomy_id?: string | null
+          parent_allergens?: string[]
+          risk_class?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          off_taxonomy_id?: string | null
+          parent_allergens?: string[]
+          risk_class?: string | null
+        }
+        Relationships: []
+      }
+      list_items: {
+        Row: {
+          checked: boolean
+          free_text: string | null
+          id: string
+          list_id: string
+          position: number
+          product_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          checked?: boolean
+          free_text?: string | null
+          id?: string
+          list_id: string
+          position?: number
+          product_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          checked?: boolean
+          free_text?: string | null
+          id?: string
+          list_id?: string
+          position?: number
+          product_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "list_items_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "list_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      list_members: {
+        Row: {
+          created_at: string
+          id: string
+          list_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          list_id: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          list_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "list_members_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lists: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          owner_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          allergen_tags: string[]
+          barcode: string
+          brand: string | null
+          categories: string[]
+          created_at: string
+          data_source: string
+          id: string
+          ingredients_raw: string | null
+          name: string | null
+          nova_group: number | null
+          nutriments: Json
+          off_last_fetched_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          allergen_tags?: string[]
+          barcode: string
+          brand?: string | null
+          categories?: string[]
+          created_at?: string
+          data_source?: string
+          id?: string
+          ingredients_raw?: string | null
+          name?: string | null
+          nova_group?: number | null
+          nutriments?: Json
+          off_last_fetched_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          allergen_tags?: string[]
+          barcode?: string
+          brand?: string | null
+          categories?: string[]
+          created_at?: string
+          data_source?: string
+          id?: string
+          ingredients_raw?: string | null
+          name?: string | null
+          nova_group?: number | null
+          nutriments?: Json
+          off_last_fetched_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          onboarding_completed: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          onboarding_completed?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          onboarding_completed?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scan_history: {
+        Row: {
+          barcode: string
+          id: string
+          product_id: string | null
+          rule_version: string | null
+          scanned_at: string
+          score: number | null
+          user_id: string
+          verdict: string | null
+        }
+        Insert: {
+          barcode: string
+          id?: string
+          product_id?: string | null
+          rule_version?: string | null
+          scanned_at?: string
+          score?: number | null
+          user_id: string
+          verdict?: string | null
+        }
+        Update: {
+          barcode?: string
+          id?: string
+          product_id?: string | null
+          rule_version?: string | null
+          scanned_at?: string
+          score?: number | null
+          user_id?: string
+          verdict?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scan_history_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      can_edit_list: {
+        Args: { p_list_id: string }
+        Returns: boolean
+      }
+      is_list_member: {
+        Args: { p_list_id: string }
+        Returns: boolean
+      }
+      is_list_owner: {
+        Args: { p_list_id: string }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Database
+
+type DefaultSchema = DatabaseWithoutInternals["public"]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const

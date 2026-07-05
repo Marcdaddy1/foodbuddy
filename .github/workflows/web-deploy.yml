@@ -1,0 +1,60 @@
+# Web deploy to Cloudflare Pages (stub — inert until configured).
+#
+# To enable, set these in the GitHub repo settings:
+#
+#   Repository VARIABLE (Settings -> Secrets and variables -> Actions -> Variables):
+#     CF_PAGES_PROJECT       - Cloudflare Pages project name (also acts as the on/off switch:
+#                              the deploy job is skipped while this variable is empty/unset)
+#
+#   Repository SECRETS (Settings -> Secrets and variables -> Actions -> Secrets):
+#     CLOUDFLARE_API_TOKEN   - API token with "Cloudflare Pages: Edit" permission
+#     CLOUDFLARE_ACCOUNT_ID  - Cloudflare account ID (dashboard -> right sidebar)
+#
+# Note: `if:` cannot read secrets, so the guard uses the CF_PAGES_PROJECT repo
+# variable. Don't set the variable until both secrets are in place.
+
+name: Web Deploy (Cloudflare Pages)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: web-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    # Guard: skip the whole job until the CF_PAGES_PROJECT repo variable is set.
+    if: ${{ vars.CF_PAGES_PROJECT != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          # Client-side (VITE_*) values are public at runtime anyway, but keep
+          # them out of the repo — set them as Actions secrets/vars as preferred.
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_POSTHOG_KEY: ${{ secrets.VITE_POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.VITE_POSTHOG_HOST }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ vars.CF_PAGES_PROJECT }}
