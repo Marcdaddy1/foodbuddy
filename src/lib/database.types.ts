@@ -1,10 +1,10 @@
 /**
- * Placeholder — regenerate with
- * `npx supabase gen types typescript --local > src/lib/database.types.ts`
- * once the local/cloud project is running.
+ * Generated from the live Supabase project "FoodBuddy claude Code"
+ * (uytsmrunqexuqtvwztlz) on 2026-07-07 via the Supabase MCP connector.
  *
- * Hand-written to match supabase/migrations/0001_initial_schema.sql exactly,
- * in the standard `supabase gen types typescript` output shape.
+ * Regenerate after schema changes with:
+ *   npx supabase gen types typescript --project-id uytsmrunqexuqtvwztlz > src/lib/database.types.ts
+ * (or ask Claude to regenerate via the Supabase connector).
  */
 
 export type Json =
@@ -15,7 +15,12 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
   public: {
     Tables: {
       app_config: {
@@ -387,18 +392,9 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      can_edit_list: {
-        Args: { p_list_id: string }
-        Returns: boolean
-      }
-      is_list_member: {
-        Args: { p_list_id: string }
-        Returns: boolean
-      }
-      is_list_owner: {
-        Args: { p_list_id: string }
-        Returns: boolean
-      }
+      can_edit_list: { Args: { p_list_id: string }; Returns: boolean }
+      is_list_member: { Args: { p_list_id: string }; Returns: boolean }
+      is_list_owner: { Args: { p_list_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -409,9 +405,9 @@ export interface Database {
   }
 }
 
-type DatabaseWithoutInternals = Database
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals["public"]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
