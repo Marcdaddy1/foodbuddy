@@ -35,13 +35,16 @@ function renderHome() {
     path: '/',
     component: HomeScreen,
   })
-  const signInRoute = createRoute({
-    getParentRoute: () => rootRoute,
-    path: '/sign-in',
-    component: () => null,
-  })
+  const stubRoutes = ['/sign-in', '/scan', '/history', '/lists', '/profile', '/product/$barcode'].map(
+    (path) =>
+      createRoute({
+        getParentRoute: () => rootRoute,
+        path,
+        component: () => null,
+      }),
+  )
   const router = createRouter({
-    routeTree: rootRoute.addChildren([indexRoute, signInRoute]),
+    routeTree: rootRoute.addChildren([indexRoute, ...stubRoutes]),
     history: createMemoryHistory({ initialEntries: ['/'] }),
   })
   return render(<RouterProvider router={router} />)
@@ -65,20 +68,25 @@ describe('HomeScreen', () => {
     expect(signInLink).toHaveAttribute('href', '/sign-in')
   })
 
-  it('shows the hello state with the user email when signed in', async () => {
+  it('shows the signed-in state with the user email and a sign-out button', async () => {
     mocks.getSession.mockResolvedValue({
       data: { session: { user: { email: 'buddy@example.com' } } },
     })
     renderHome()
     expect(
-      await screen.findByText(/hello, buddy@example\.com/i),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText(/foodbuddy skeleton is alive/i),
-    ).toBeInTheDocument()
+      (await screen.findAllByText(/buddy@example\.com/i)).length,
+    ).toBeGreaterThan(0)
     expect(
       screen.getByRole('button', { name: /sign out/i }),
     ).toBeInTheDocument()
+  })
+
+  it('shows the scan CTA and mock recent scans', async () => {
+    renderHome()
+    const scanLink = await screen.findByRole('link', { name: /scan a product/i })
+    expect(scanLink).toHaveAttribute('href', '/scan')
+    expect(screen.getByRole('region', { name: /recent scans/i })).toBeInTheDocument()
+    expect(screen.getByText('Nutella')).toBeInTheDocument()
   })
 
   it('shows the consent banner while consent is unset and hides it after "No thanks"', async () => {

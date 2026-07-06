@@ -1,41 +1,63 @@
 @import 'tailwindcss';
+/* Inter Variable, self-hosted (Capacitor app must not depend on a font CDN offline). */
+@import '@fontsource-variable/inter';
 
+/*
+ * Design tokens — source of truth: design-system/MASTER.md.
+ * Light values live in @theme; dark values override the same custom
+ * properties in the prefers-color-scheme block below (Tailwind v4
+ * utilities reference the vars, so overrides cascade automatically).
+ */
 @theme {
   /* Brand */
-  --color-brand-700: #2d5016; /* deep green */
-  --color-brand-400: #7cb342; /* leaf */
-  --color-accent-500: #ff6b35; /* orange */
+  --color-brand-700: #2d5016; /* headers, primary text accents, active tab */
+  --color-brand-400: #7cb342; /* fills/progress/decorative — never body text on white */
+  --color-accent-500: #ff6b35; /* primary CTA (scan), highlights */
 
-  /* Surfaces + text (overridden for dark mode below) */
-  --color-surface: #ffffff;
-  --color-surface-muted: #f5f5f5;
-  --color-ink: #1c211a;
-  --color-ink-muted: #5c665a;
+  /* Text that sits ON brand/accent fills (kept AA in both modes) */
+  --color-on-brand: #ffffff;
+  --color-on-accent: #2b1204;
+
+  /* Surfaces */
+  --color-surface: #ffffff; /* cards, sheets */
+  --color-surface-muted: #f5f5f5; /* app background */
+
+  /* Text */
+  --color-ink: #171d14; /* text primary, 15:1+ */
+  --color-ink-muted: #4a5546; /* text muted, >=4.6:1 */
 
   /* States */
   --color-danger-500: #e53e3e;
 
-  /* Verdict tokens: Safe / Caution / Avoid */
-  --color-verdict-safe: #2e7d32;
-  --color-verdict-caution: #f9a825;
+  /* Verdict tokens: Safe / Caution / Avoid (icon + label + tinted bg, never color-only) */
+  --color-verdict-safe: #2f7d32;
+  --color-verdict-caution: #b45309;
   --color-verdict-avoid: #c62828;
 
-  /* Inter for headings via system fallback stack — no webfont at Phase 0 */
+  /* Typography: Inter for headings; system stack for body */
   --font-heading:
-    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
-    sans-serif;
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, sans-serif;
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, sans-serif;
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Dark mode: override the surface/ink variables the utilities reference */
+/* Dark mode — token table from MASTER.md */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-surface: #1a1f18;
-    --color-surface-muted: #121510;
-    --color-ink: #eef1ec;
-    --color-ink-muted: #a4ada0;
+    --color-brand-700: #a5d66e; /* brand text/icons lighten on dark */
+    --color-brand-400: #8bc34a;
+    --color-accent-500: #ff8a5c;
+    --color-on-brand: #1c2a0e;
+    --color-surface: #151915;
+    --color-surface-muted: #0d110d;
+    --color-ink: #ecf2e8;
+    --color-ink-muted: #9daa98;
+    --color-danger-500: #f87171;
+    --color-verdict-safe: #66bb6a;
+    --color-verdict-caution: #f59e0b;
+    --color-verdict-avoid: #ef5350;
   }
 }
 
@@ -46,6 +68,8 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
+  font-size: 16px; /* 16px minimum on mobile */
+  line-height: 1.5;
   background-color: var(--color-surface-muted);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
@@ -57,4 +81,23 @@ h2,
 h3,
 h4 {
   font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* A11y gate: visible focus ring on every interactive element */
+:focus-visible {
+  outline: 2px solid var(--color-brand-700);
+  outline-offset: 2px;
+}
+
+/* A11y gate: respect prefers-reduced-motion on all animation/transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

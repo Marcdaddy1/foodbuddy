@@ -10,11 +10,36 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as ScanRouteImport } from './routes/scan'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ListsRouteImport } from './routes/lists'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductBarcodeRouteImport } from './routes/product.$barcode'
 
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListsRoute = ListsRouteImport.update({
+  id: '/lists',
+  path: '/lists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,31 +47,78 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductBarcodeRoute = ProductBarcodeRouteImport.update({
+  id: '/product/$barcode',
+  path: '/product/$barcode',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
+  '/lists': typeof ListsRoute
+  '/profile': typeof ProfileRoute
+  '/scan': typeof ScanRoute
   '/sign-in': typeof SignInRoute
+  '/product/$barcode': typeof ProductBarcodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
+  '/lists': typeof ListsRoute
+  '/profile': typeof ProfileRoute
+  '/scan': typeof ScanRoute
   '/sign-in': typeof SignInRoute
+  '/product/$barcode': typeof ProductBarcodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/history': typeof HistoryRoute
+  '/lists': typeof ListsRoute
+  '/profile': typeof ProfileRoute
+  '/scan': typeof ScanRoute
   '/sign-in': typeof SignInRoute
+  '/product/$barcode': typeof ProductBarcodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in'
+  fullPaths:
+    | '/'
+    | '/history'
+    | '/lists'
+    | '/profile'
+    | '/scan'
+    | '/sign-in'
+    | '/product/$barcode'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in'
-  id: '__root__' | '/' | '/sign-in'
+  to:
+    | '/'
+    | '/history'
+    | '/lists'
+    | '/profile'
+    | '/scan'
+    | '/sign-in'
+    | '/product/$barcode'
+  id:
+    | '__root__'
+    | '/'
+    | '/history'
+    | '/lists'
+    | '/profile'
+    | '/scan'
+    | '/sign-in'
+    | '/product/$barcode'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HistoryRoute: typeof HistoryRoute
+  ListsRoute: typeof ListsRoute
+  ProfileRoute: typeof ProfileRoute
+  ScanRoute: typeof ScanRoute
   SignInRoute: typeof SignInRoute
+  ProductBarcodeRoute: typeof ProductBarcodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +130,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lists': {
+      id: '/lists'
+      path: '/lists'
+      fullPath: '/lists'
+      preLoaderRoute: typeof ListsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +165,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/$barcode': {
+      id: '/product/$barcode'
+      path: '/product/$barcode'
+      fullPath: '/product/$barcode'
+      preLoaderRoute: typeof ProductBarcodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HistoryRoute: HistoryRoute,
+  ListsRoute: ListsRoute,
+  ProfileRoute: ProfileRoute,
+  ScanRoute: ScanRoute,
   SignInRoute: SignInRoute,
+  ProductBarcodeRoute: ProductBarcodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
