@@ -1,0 +1,1163 @@
+{
+  "ruleVersion": "v1.0.0",
+  "generatedFrom": "off-popular-products.json",
+  "entries": [
+    {
+      "code": "6111246721261",
+      "name": "Fromage Blanc Nature",
+      "brands": "Milky Food Professional",
+      "result": {
+        "score": 52,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 49,
+          "additives": 95,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111035000430",
+      "name": "Sidi Ali",
+      "brands": "سيدي علي",
+      "result": {
+        "score": 72,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 69,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111242100992",
+      "name": "Perly",
+      "brands": "Jaouda",
+      "result": {
+        "score": 78,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 80,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111035000058",
+      "name": "Eau minérale naturelle",
+      "brands": "sidi ali",
+      "result": {
+        "score": 59,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 18,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "limited-data",
+            "label": "Limited product data — score is a conservative estimate",
+            "severity": "info"
+          }
+        ],
+        "lowConfidence": true
+      }
+    },
+    {
+      "code": "6111035002175",
+      "name": "Sidi Ali",
+      "brands": "Sidi Ali",
+      "result": {
+        "score": 52,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 3,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "limited-data",
+            "label": "Limited product data — score is a conservative estimate",
+            "severity": "info"
+          }
+        ],
+        "lowConfidence": true
+      }
+    },
+    {
+      "code": "6111266962187",
+      "name": "Lait de la ferme jaouda",
+      "brands": "Jaouda",
+      "result": {
+        "score": 84,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 94,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111242106949",
+      "name": "Jben",
+      "brands": "Jaouda",
+      "result": {
+        "score": 44,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 39,
+          "additives": 85,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "additive-moderate:e407",
+            "label": "Contains Carrageenan (E407)",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3274080005003",
+      "name": "isabelle",
+      "brands": "Cristaline",
+      "result": {
+        "score": 52,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 3,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "limited-data",
+            "label": "Limited product data — score is a conservative estimate",
+            "severity": "info"
+          }
+        ],
+        "lowConfidence": true
+      }
+    },
+    {
+      "code": "7622210449283",
+      "name": "Prince Goût Chocolat au blé complet",
+      "brands": "Mondelez",
+      "result": {
+        "score": 39,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 21,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111242101180",
+      "name": "uht jaouda 1L",
+      "brands": "Jaouda",
+      "result": {
+        "score": 91,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 81,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111128000071",
+      "name": "Ain Saïss",
+      "brands": "Danone",
+      "result": {
+        "score": 88,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 75,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111252421568",
+      "name": "اكوافينا",
+      "brands": "AQUAFINA",
+      "result": {
+        "score": 75,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 75,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111242100985",
+      "name": "",
+      "brands": "Perly",
+      "result": {
+        "score": 93,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 87,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111035000027",
+      "name": "6111035000027",
+      "brands": "Sidi Ali",
+      "result": {
+        "score": 75,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 75,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3760049790214",
+      "name": "Pain De Mie Bio",
+      "brands": "La Boulangère, La Boulangère Bio",
+      "result": {
+        "score": 57,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 56,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111246721278",
+      "name": "Cream cheese",
+      "brands": "Original",
+      "result": {
+        "score": 79,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 83,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111035502828",
+      "name": "Eau minéral naturelle",
+      "brands": "Ain atlas",
+      "result": {
+        "score": 75,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 75,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3046920029759",
+      "name": "",
+      "brands": "Lindt, Lindt & Sprüngli",
+      "result": {
+        "score": 58,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 41,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "5449000054227",
+      "name": "Coca-Cola Original Taste",
+      "brands": "Coca Cola Life, Coca-Cola",
+      "result": {
+        "score": 27,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 12,
+          "additives": 70,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "additive-moderate:e150d",
+            "label": "Contains Sulphite ammonia caramel (E150D)",
+            "severity": "warn"
+          },
+          {
+            "tag": "additive-moderate:e338",
+            "label": "Contains Phosphoric acid (E338)",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111032009665",
+      "name": "",
+      "brands": "Salim",
+      "result": {
+        "score": 97,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 94,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3329770077003",
+      "name": "Skyr nature 0%",
+      "brands": "Yoplait",
+      "result": {
+        "score": 93,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 87,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111242100206",
+      "name": "Le nature",
+      "brands": "Jaouda",
+      "result": {
+        "score": 74,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 72,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111252421582",
+      "name": "اكوافينا",
+      "brands": "pepsi",
+      "result": {
+        "score": 88,
+        "grade": "A",
+        "breakdown": {
+          "nutrition": 75,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3760049798609",
+      "name": "Pain de mie grandes tranches Seigle & Graines 500g",
+      "brands": "la Boulangère",
+      "result": {
+        "score": 68,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 80,
+          "additives": 95,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3168930010265",
+      "name": "cruesly mélange de noix",
+      "brands": "Quaker",
+      "result": {
+        "score": 65,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 72,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "06175700",
+      "name": "Tartines craquantes au sarrasin imp",
+      "brands": "Ekibio, Le pain des Fleurs",
+      "result": {
+        "score": 78,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 80,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3175680011480",
+      "name": "Sésame",
+      "brands": "Gerblé",
+      "result": {
+        "score": 56,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 54,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3046920022651",
+      "name": "Excellence 70% cacao noir intense",
+      "brands": "Lindt",
+      "result": {
+        "score": 44,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 14,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3017620422003",
+      "name": "Nutella",
+      "brands": "Nutella, Ferrero, Yum yum",
+      "result": {
+        "score": 30,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 2,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3046920022606",
+      "name": "Excellence 85% cacao",
+      "brands": "Lindt",
+      "result": {
+        "score": 51,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 26,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3760020507350",
+      "name": "Pur beurre de cacahuète",
+      "brands": "Jardin Bio étic",
+      "result": {
+        "score": 76,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 51,
+          "additives": 100,
+          "processing": 100
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111203006653",
+      "name": "Cheddar",
+      "brands": "la Hollandaise",
+      "result": {
+        "score": 36,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 21,
+          "additives": 85,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "additive-moderate:e452",
+            "label": "Contains Polyphosphates (E452)",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "8052575090254",
+      "name": "Rigoni di Asiago - Nocciolata bio",
+      "brands": "Rigoni di Asiago",
+      "result": {
+        "score": 37,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 16,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3017620425035",
+      "name": "Nutella",
+      "brands": "Nutella",
+      "result": {
+        "score": 30,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 2,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111035003035",
+      "name": "Oulmes natural carbonated water",
+      "brands": "Les eaux minérales d'Oulmès S.A.",
+      "result": {
+        "score": 39,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 3,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "limited-data",
+            "label": "Limited product data — score is a conservative estimate",
+            "severity": "info"
+          }
+        ],
+        "lowConfidence": true
+      }
+    },
+    {
+      "code": "6111031005064",
+      "name": "Tonik",
+      "brands": "tonik",
+      "result": {
+        "score": 40,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 5,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3229820100234",
+      "name": "Fourrés Chocolat Noir",
+      "brands": "Bjorg",
+      "result": {
+        "score": 42,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 29,
+          "additives": 95,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-sugar",
+            "label": "High sugar",
+            "severity": "warn"
+          },
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          },
+          {
+            "tag": "additives-unrecognized",
+            "label": "1 unrecognized additive",
+            "severity": "info"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3228857002344",
+      "name": "Pain de mie american sandwich complet sans sucres ajoutés 600g",
+      "brands": "Harrys",
+      "result": {
+        "score": 65,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 72,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "7311070032611",
+      "name": "KRISPROLLS Complets",
+      "brands": "KRISPROLLS",
+      "result": {
+        "score": 70,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 83,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3284230006408",
+      "name": "Brioche Tranchée Bio 400g",
+      "brands": "La Boulangère",
+      "result": {
+        "score": 53,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 49,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "5449000147417",
+      "name": "Cappy PULPY",
+      "brands": "Cappy, Crappy",
+      "result": {
+        "score": 44,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 30,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "5411188112709",
+      "name": "Geröstete Mandel Ohne Zucker",
+      "brands": "alpro",
+      "result": {
+        "score": 63,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 69,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3168930163480",
+      "name": "Alvalle Gazpacho l'original",
+      "brands": "Alvalle",
+      "result": {
+        "score": 53,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 30,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111180000231",
+      "name": "levure pâtisserie",
+      "brands": "",
+      "result": {
+        "score": 57,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 64,
+          "additives": 85,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "additive-moderate:e450",
+            "label": "Contains Diphosphates (E450)",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3029330022428",
+      "name": "14 Maxi Tranches complet sans sucres ajoutés",
+      "brands": "Jacquet",
+      "result": {
+        "score": 69,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 80,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111259092495",
+      "name": "Goldium crémeux",
+      "brands": "",
+      "result": {
+        "score": 48,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 39,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "high-saturated-fat",
+            "label": "High saturated fat",
+            "severity": "warn"
+          },
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "42104964",
+      "name": "Ciel 33cl",
+      "brands": "Ciel",
+      "result": {
+        "score": 75,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 75,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "3760049794298",
+      "name": "Pain de mie Bio grandes tranches céréales & graines 500g",
+      "brands": "La Boulangère Bio, La boulangere",
+      "result": {
+        "score": 57,
+        "grade": "C",
+        "breakdown": {
+          "nutrition": 56,
+          "additives": 100,
+          "processing": 15
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "ultra-processed",
+            "label": "Ultra-processed (NOVA 4)",
+            "severity": "warn"
+          }
+        ],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "7300400481595",
+      "name": "AUTHENTIQUE",
+      "brands": "wasa, WAZA",
+      "result": {
+        "score": 78,
+        "grade": "B",
+        "breakdown": {
+          "nutrition": 80,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [],
+        "lowConfidence": false
+      }
+    },
+    {
+      "code": "6111035001659",
+      "name": "Ain Atlas",
+      "brands": "Eau minérale naturelle des Montagnes d'Atlas",
+      "result": {
+        "score": 39,
+        "grade": "D",
+        "breakdown": {
+          "nutrition": 3,
+          "additives": 100,
+          "processing": 50
+        },
+        "ruleVersion": "v1.0.0",
+        "flags": [
+          {
+            "tag": "limited-data",
+            "label": "Limited product data — score is a conservative estimate",
+            "severity": "info"
+          }
+        ],
+        "lowConfidence": true
+      }
+    }
+  ]
+}

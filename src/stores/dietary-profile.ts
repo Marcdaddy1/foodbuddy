@@ -13,7 +13,7 @@
  */
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { MockProduct } from '../lib/mock-catalog'
+import type { RiskClass } from '../lib/off/types'
 
 /* ---------------------------------------------------------------------------
  * Option catalogs (EU "14 major allergens" + common patterns)
@@ -112,13 +112,35 @@ export interface VerdictResult {
 const WORSE: Record<Verdict, number> = { safe: 0, caution: 1, avoid: 2 }
 
 /**
+ * Structural product input for verdict derivation. Both MockProduct
+ * (mock-catalog) and NormalizedProduct (src/lib/off) satisfy this shape —
+ * NormalizedProduct declares traces as `tracesTags`, mocks as `mayContainTags`;
+ * both are honored (union) so traces are never dropped.
+ */
+export interface VerdictProduct {
+  name: string
+  ingredients: ReadonlyArray<{
+    name: string
+    riskClass: RiskClass
+    allergenTags: ReadonlyArray<string>
+  }>
+  /** Declared "contains" allergen tags (OFF taxonomy, e.g. 'en:milk'). */
+  allergenTags: ReadonlyArray<string>
+  /** "May contain traces of…" tags (mock-catalog naming). */
+  mayContainTags?: ReadonlyArray<string>
+  /** "May contain traces of…" tags (OFF naming). */
+  tracesTags?: ReadonlyArray<string>
+}
+
+/**
  * Derive a Safe / Caution / Avoid verdict for a product against a profile.
  *
  * Pure and deterministic — no AI, no I/O (CLAUDE.md hard rule #1).
  * PLACEHOLDER: the real Phase-2 engine adds taxonomy-tree resolution and a
  * full allergen test matrix; this covers the UI-phase rules only:
- *   1. Declared allergen present            -> Avoid  (with triggering rule)
- *   2. "May contain" a declared allergen    -> Caution
+ *   1. Declared allergen present (product-level tag OR ingredient-level tag)
+ *      -> Avoid (with triggering rule)
+ *   2. "May contain" / traces of a declared allergen -> Caution
  *   3. Unknown ingredient + any declared allergy -> Caution (fail conservative,
  *      never Safe — CLAUDE.md hard rule #2)
  *   4. Custom avoid-list ingredient match   -> Avoid
@@ -126,7 +148,7 @@ const WORSE: Record<Verdict, number> = { safe: 0, caution: 1, avoid: 2 }
  *   6. Diet-pattern conflict                -> Caution
  *   7. Otherwise                            -> Safe
  */
-export function deriveVerdict(product: MockProduct, profile: VerdictInput): VerdictResult {
+export function deriveVerdict(product: VerdictProduct, profile: VerdictInput): VerdictResult {
   let result: VerdictResult = {
     verdict: 'safe',
     rule: 'No conflicts with your dietary profile',
@@ -136,15 +158,16 @@ export function deriveVerdict(product: MockProduct, profile: VerdictInput): Verd
     if (WORSE[verdict] > WORSE[result.verdict]) result = { verdict, rule }
   }
 
-  const ingredientTags = new Set(product.ingredients.flatMap((i) => i.allergenTags))
+  const ingredientTags = new Set(product.ingredients.flatMap((i) => [...i.allergenTags]))
   const containsTag = (tag: string) => product.allergenTags.includes(tag) || ingredientTags.has(tag)
+  const traceTags = new Set([...(product.mayContainTags ?? []), ...(product.tracesTags ?? [])])
 
   // 1 + 2: declared allergies
   for (const allergy of profile.allergies) {
     const label = allergenLabel(allergy.tag)
     if (containsTag(allergy.tag)) {
       consider('avoid', `Contains ${label.toLowerCase()} — your allergy`)
-    } else if (product.mayContainTags.includes(allergy.tag)) {
+    } else if (traceTags.has(allergy.tag)) {
       consider('caution', `May contain traces of ${label.toLowerCase()} — your allergy`)
     }
   }

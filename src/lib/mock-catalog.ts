@@ -11,12 +11,10 @@
  * Nothing in this file may be treated as nutrition or medical truth.
  */
 
-export type RiskClass =
-  | 'allergen'
-  | 'additive'
-  | 'controversial'
-  | 'benign'
-  | 'unknown'
+// Canonical RiskClass now lives with the real-data normalizer; re-exported
+// here so existing imports keep working.
+export type { RiskClass } from './off/types'
+import type { RiskClass } from './off/types'
 
 export interface MockIngredient {
   name: string

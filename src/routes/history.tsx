@@ -1,17 +1,25 @@
 import { useMemo, useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Search, ScanLine } from 'lucide-react'
-import { findProduct, gradeBand, MOCK_SCANS, type MockProduct } from '../lib/mock-catalog'
-import { deriveVerdict, useDietaryProfileStore } from '../stores/dietary-profile'
+import { findProduct, gradeBand, MOCK_SCANS } from '../lib/mock-catalog'
+import { deriveVerdict, useDietaryProfileStore, type Verdict } from '../stores/dietary-profile'
+import { useAuth } from '../hooks/useAuth'
+import { useScanHistory } from '../hooks/useScanHistory'
 import { VerdictChip } from '../components/VerdictBanner'
 
 export const Route = createFileRoute('/history')({
   component: HistoryScreen,
 })
 
-interface ScanEntry {
-  product: MockProduct
+/** Unified row shape for real (Supabase) and sample (mock) history entries. */
+interface HistoryEntry {
+  key: string
+  barcode: string
+  name: string
+  brand: string
   scannedAt: Date
+  score: number | null
+  verdict: Verdict | null
 }
 
 function dayLabel(date: Date): string {
@@ -24,44 +32,76 @@ function dayLabel(date: Date): string {
   return date.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
-/** Scan history — mock data until scans persist to Supabase (Phase 1). */
+/** Scan history — real Supabase rows when signed in, sample data otherwise. */
 function HistoryScreen() {
   const [query, setQuery] = useState('')
+  const { session, loading } = useAuth()
+  const { data: realScans, isPending: historyPending } = useScanHistory(session?.user.id)
   const allergies = useDietaryProfileStore((s) => s.allergies)
   const intolerances = useDietaryProfileStore((s) => s.intolerances)
   const dietPatterns = useDietaryProfileStore((s) => s.dietPatterns)
   const customAvoid = useDietaryProfileStore((s) => s.customAvoid)
-  const profile = { allergies, intolerances, dietPatterns, customAvoid }
+  const signedIn = Boolean(session)
+
+  const entries = useMemo<HistoryEntry[]>(() => {
+    if (signedIn) {
+      return (realScans ?? []).map((scan) => ({
+        key: scan.id,
+        barcode: scan.barcode,
+        name: scan.productName ?? `Barcode ${scan.barcode}`,
+        brand: scan.brand ?? '',
+        scannedAt: scan.scannedAt,
+        score: scan.score,
+        verdict: scan.verdict,
+      }))
+    }
+    const profile = { allergies, intolerances, dietPatterns, customAvoid }
+    return MOCK_SCANS.flatMap((scan) => {
+      const product = findProduct(scan.barcode)
+      if (!product) return []
+      return [
+        {
+          key: `${scan.barcode}-${scan.scannedAt.getTime()}`,
+          barcode: scan.barcode,
+          name: product.name,
+          brand: product.brand,
+          scannedAt: scan.scannedAt,
+          score: product.score,
+          verdict: deriveVerdict(product, profile).verdict,
+        },
+      ]
+    })
+  }, [signedIn, realScans, allergies, intolerances, dietPatterns, customAvoid])
 
   const groups = useMemo(() => {
     const needle = query.trim().toLowerCase()
-    const entries: ScanEntry[] = MOCK_SCANS.flatMap((scan) => {
-      const product = findProduct(scan.barcode)
-      if (!product) return []
-      if (
-        needle &&
-        !product.name.toLowerCase().includes(needle) &&
-        !product.brand.toLowerCase().includes(needle)
-      ) {
-        return []
-      }
-      return [{ product, scannedAt: scan.scannedAt }]
-    }).sort((a, b) => b.scannedAt.getTime() - a.scannedAt.getTime())
+    const filtered = entries
+      .filter(
+        (entry) =>
+          !needle ||
+          entry.name.toLowerCase().includes(needle) ||
+          entry.brand.toLowerCase().includes(needle),
+      )
+      .sort((a, b) => b.scannedAt.getTime() - a.scannedAt.getTime())
 
-    const byDay = new Map<string, ScanEntry[]>()
-    for (const entry of entries) {
+    const byDay = new Map<string, HistoryEntry[]>()
+    for (const entry of filtered) {
       const label = dayLabel(entry.scannedAt)
       byDay.set(label, [...(byDay.get(label) ?? []), entry])
     }
     return [...byDay.entries()]
-  }, [query])
+  }, [entries, query])
+
+  const busy = loading || (signedIn && historyPending)
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4 px-4 pb-[calc(96px+env(safe-area-inset-bottom))] pt-[calc(16px+env(safe-area-inset-top))]">
       <header>
         <h1 className="text-2xl font-bold text-ink">History</h1>
         <p className="mt-0.5 text-sm text-ink-muted">
-          Sample scans — your real history syncs once scanning goes live.
+          {signedIn
+            ? 'Your scans, synced to your account.'
+            : 'Sample scans — sign in to sync your real history.'}
         </p>
       </header>
 
@@ -85,7 +125,14 @@ function HistoryScreen() {
         />
       </div>
 
-      {groups.length === 0 ? (
+      {busy ? (
+        <div aria-busy="true" className="flex flex-col gap-2">
+          <span className="sr-only">Loading your scan history…</span>
+          {[0, 1, 2].map((i) => (
+            <div key={i} aria-hidden="true" className="h-[76px] animate-pulse rounded-2xl bg-ink/10" />
+          ))}
+        </div>
+      ) : groups.length === 0 ? (
         <section className="flex flex-col items-center gap-3 rounded-2xl bg-surface p-8 text-center shadow-[0_8px_32px_rgba(23,29,20,0.08)]">
           <ScanLine aria-hidden="true" size={40} strokeWidth={2} className="text-ink-muted" />
           <h2 className="text-base font-bold text-ink">
@@ -105,47 +152,46 @@ function HistoryScreen() {
           )}
         </section>
       ) : (
-        groups.map(([label, entries]) => (
+        groups.map(([label, dayEntries]) => (
           <section key={label} aria-label={label}>
             <h2 className="px-1 text-sm font-semibold uppercase tracking-wide text-ink-muted">
               {label}
             </h2>
             <ul className="mt-2 flex flex-col gap-2">
-              {entries.map(({ product, scannedAt }) => {
-                const verdict = deriveVerdict(product, profile)
-                return (
-                  <li key={`${product.barcode}-${scannedAt.getTime()}`}>
-                    <Link
-                      to="/product/$barcode"
-                      params={{ barcode: product.barcode }}
-                      className="flex min-h-11 items-center justify-between gap-3 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(23,29,20,0.08)] transition-transform active:scale-[0.98]"
-                    >
-                      <span className="min-w-0">
-                        <span className="block truncate text-sm font-semibold text-ink">
-                          {product.name}
-                        </span>
-                        <span className="block truncate text-xs text-ink-muted">
-                          {product.brand} ·{' '}
-                          {scannedAt.toLocaleTimeString(undefined, {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </span>
+              {dayEntries.map((entry) => (
+                <li key={entry.key}>
+                  <Link
+                    to="/product/$barcode"
+                    params={{ barcode: entry.barcode }}
+                    className="flex min-h-11 items-center justify-between gap-3 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(23,29,20,0.08)] transition-transform active:scale-[0.98]"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-semibold text-ink">
+                        {entry.name}
                       </span>
-                      <span className="flex shrink-0 items-center gap-2">
+                      <span className="block truncate text-xs text-ink-muted">
+                        {entry.brand ? `${entry.brand} · ` : ''}
+                        {entry.scannedAt.toLocaleTimeString(undefined, {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 items-center gap-2">
+                      {entry.score !== null && (
                         <span className="text-base font-bold tabular-nums text-ink">
-                          {product.score}
+                          {entry.score}
                           <span className="text-xs font-semibold text-ink-muted">
                             {' '}
-                            · {gradeBand(product.score)}
+                            · {gradeBand(entry.score)}
                           </span>
                         </span>
-                        <VerdictChip verdict={verdict.verdict} />
-                      </span>
-                    </Link>
-                  </li>
-                )
-              })}
+                      )}
+                      {entry.verdict && <VerdictChip verdict={entry.verdict} />}
+                    </span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </section>
         ))

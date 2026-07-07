@@ -110,6 +110,87 @@ describe('deriveVerdict', () => {
   })
 })
 
+describe('deriveVerdict with NormalizedProduct-shaped input (real OFF data)', () => {
+  /** Mimics src/lib/off NormalizedProduct: tracesTags instead of mayContainTags. */
+  function normalizedProduct(overrides: {
+    ingredients?: { name: string; riskClass: 'allergen' | 'additive' | 'controversial' | 'benign' | 'unknown'; allergenTags: string[] }[]
+    allergenTags?: string[]
+    tracesTags?: string[]
+  }) {
+    return {
+      name: 'Test product',
+      ingredients: overrides.ingredients ?? [],
+      allergenTags: overrides.allergenTags ?? [],
+      tracesTags: overrides.tracesTags ?? [],
+    }
+  }
+
+  it('OFF tracesTags with a declared allergy => Caution', () => {
+    const result = deriveVerdict(
+      normalizedProduct({ tracesTags: ['en:milk'] }),
+      profile({ allergies: [{ tag: 'en:milk', severity: 'severe' }] }),
+    )
+    expect(result.verdict).toBe('caution')
+    expect(result.rule).toMatch(/may contain traces of milk/i)
+  })
+
+  it('product-level allergen tag alone (no ingredient rows) => Avoid with rule text', () => {
+    // OFF often declares allergens_tags even when the ingredient list is missing.
+    const result = deriveVerdict(
+      normalizedProduct({ allergenTags: ['en:nuts'] }),
+      profile({ allergies: [{ tag: 'en:nuts', severity: 'moderate' }] }),
+    )
+    expect(result.verdict).toBe('avoid')
+    expect(result.rule).toBe('Contains tree nuts — your allergy')
+  })
+
+  it('unknown (unparseable) ingredient + declared allergy => Caution, never Safe', () => {
+    const result = deriveVerdict(
+      normalizedProduct({
+        ingredients: [{ name: 'Piments rouges', riskClass: 'unknown', allergenTags: [] }],
+      }),
+      profile({ allergies: [{ tag: 'en:eggs', severity: 'mild' }] }),
+    )
+    expect(result.verdict).toBe('caution')
+    expect(result.rule).toMatch(/can't be fully verified/i)
+  })
+
+  it('unknown ingredient without any declared allergy stays Safe', () => {
+    const result = deriveVerdict(
+      normalizedProduct({
+        ingredients: [{ name: 'Piments rouges', riskClass: 'unknown', allergenTags: [] }],
+      }),
+      EMPTY_PROFILE,
+    )
+    expect(result.verdict).toBe('safe')
+  })
+
+  it('a "contains" allergen outranks traces of another declared allergen', () => {
+    const result = deriveVerdict(
+      normalizedProduct({ allergenTags: ['en:gluten'], tracesTags: ['en:soybeans'] }),
+      profile({
+        allergies: [
+          { tag: 'en:soybeans', severity: 'severe' },
+          { tag: 'en:gluten', severity: 'mild' },
+        ],
+      }),
+    )
+    expect(result.verdict).toBe('avoid')
+    expect(result.rule).toBe('Contains gluten (wheat) — your allergy')
+  })
+
+  it('intolerances match ingredient-level allergen tags from normalized data', () => {
+    const result = deriveVerdict(
+      normalizedProduct({
+        ingredients: [{ name: 'skimmed milk powder', riskClass: 'allergen', allergenTags: ['en:milk'] }],
+      }),
+      profile({ intolerances: ['lactose'] }),
+    )
+    expect(result.verdict).toBe('caution')
+    expect(result.rule).toMatch(/lactose intolerance/i)
+  })
+})
+
 describe('useDietaryProfileStore', () => {
   it('toggles allergies with a default moderate severity and updates severity', () => {
     const store = useDietaryProfileStore

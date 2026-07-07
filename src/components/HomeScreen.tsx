@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ScanLine, History, ListChecks, CircleUserRound, ChevronRight, LogIn } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
+import { useScanHistory } from '../hooks/useScanHistory'
 import { ConsentBanner } from './ConsentBanner'
 import { VerdictChip } from './VerdictBanner'
 import { findProduct, gradeBand, MOCK_SCANS } from '../lib/mock-catalog'
@@ -19,6 +20,7 @@ function greetingForHour(hour: number): string {
  */
 export function HomeScreen() {
   const { session, loading, isConfigured, signOut } = useAuth()
+  const { data: realScans } = useScanHistory(session?.user.id, 10)
   const allergies = useDietaryProfileStore((s) => s.allergies)
   const intolerances = useDietaryProfileStore((s) => s.intolerances)
   const dietPatterns = useDietaryProfileStore((s) => s.dietPatterns)
@@ -32,7 +34,7 @@ export function HomeScreen() {
   }
 
   const profile = { allergies, intolerances, dietPatterns, customAvoid }
-  const recentScans = MOCK_SCANS.map((scan) => ({
+  const mockScans = MOCK_SCANS.map((scan) => ({
     scan,
     product: findProduct(scan.barcode),
   })).filter((entry) => entry.product !== undefined)
@@ -86,33 +88,77 @@ export function HomeScreen() {
             See all
           </Link>
         </div>
-        <div className="-mx-4 mt-1 flex gap-3 overflow-x-auto px-4 pb-2">
-          {recentScans.map(({ scan, product }) => {
-            if (!product) return null
-            const verdict = deriveVerdict(product, profile)
-            return (
-              <Link
-                key={scan.barcode}
-                to="/product/$barcode"
-                params={{ barcode: scan.barcode }}
-                className="w-40 shrink-0 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(23,29,20,0.08)] transition-transform active:scale-[0.98]"
-              >
-                <p className="truncate text-sm font-semibold text-ink">{product.name}</p>
-                <p className="truncate text-xs text-ink-muted">{product.brand}</p>
-                <p className="mt-2 text-lg font-bold tabular-nums text-ink">
-                  {product.score}
-                  <span className="text-xs font-semibold text-ink-muted"> · {gradeBand(product.score)}</span>
-                </p>
-                <div className="mt-1.5">
-                  <VerdictChip verdict={verdict.verdict} />
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-        <p className="text-xs text-ink-muted">
-          Sample data — your real scans appear here once scanning goes live.
-        </p>
+        {session ? (
+          realScans && realScans.length > 0 ? (
+            <div className="-mx-4 mt-1 flex gap-3 overflow-x-auto px-4 pb-2">
+              {realScans.map((entry) => (
+                <Link
+                  key={entry.id}
+                  to="/product/$barcode"
+                  params={{ barcode: entry.barcode }}
+                  className="w-40 shrink-0 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(23,29,20,0.08)] transition-transform active:scale-[0.98]"
+                >
+                  <p className="truncate text-sm font-semibold text-ink">
+                    {entry.productName ?? `Barcode ${entry.barcode}`}
+                  </p>
+                  <p className="truncate text-xs text-ink-muted">{entry.brand ?? ' '}</p>
+                  <p className="mt-2 text-lg font-bold tabular-nums text-ink">
+                    {entry.score !== null ? (
+                      <>
+                        {entry.score}
+                        <span className="text-xs font-semibold text-ink-muted">
+                          {' '}
+                          · {gradeBand(entry.score)}
+                        </span>
+                      </>
+                    ) : (
+                      '—'
+                    )}
+                  </p>
+                  {entry.verdict && (
+                    <div className="mt-1.5">
+                      <VerdictChip verdict={entry.verdict} />
+                    </div>
+                  )}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-1 rounded-2xl bg-surface p-4 text-sm text-ink-muted shadow-[0_8px_32px_rgba(23,29,20,0.08)]">
+              No scans yet — scan your first product and it'll show up here.
+            </p>
+          )
+        ) : (
+          <>
+            <div className="-mx-4 mt-1 flex gap-3 overflow-x-auto px-4 pb-2">
+              {mockScans.map(({ scan, product }) => {
+                if (!product) return null
+                const verdict = deriveVerdict(product, profile)
+                return (
+                  <Link
+                    key={scan.barcode}
+                    to="/product/$barcode"
+                    params={{ barcode: scan.barcode }}
+                    className="w-40 shrink-0 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(23,29,20,0.08)] transition-transform active:scale-[0.98]"
+                  >
+                    <p className="truncate text-sm font-semibold text-ink">{product.name}</p>
+                    <p className="truncate text-xs text-ink-muted">{product.brand}</p>
+                    <p className="mt-2 text-lg font-bold tabular-nums text-ink">
+                      {product.score}
+                      <span className="text-xs font-semibold text-ink-muted"> · {gradeBand(product.score)}</span>
+                    </p>
+                    <div className="mt-1.5">
+                      <VerdictChip verdict={verdict.verdict} />
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+            <p className="text-xs text-ink-muted">
+              Sample data — sign in and scan to see your real history here.
+            </p>
+          </>
+        )}
       </section>
 
       <section aria-label="Quick actions" className="grid grid-cols-3 gap-3">

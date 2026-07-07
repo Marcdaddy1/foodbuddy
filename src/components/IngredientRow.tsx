@@ -1,5 +1,11 @@
 import { ChevronRight, FlaskConical, Leaf, ShieldAlert, HelpCircle, Scale, type LucideIcon } from 'lucide-react'
-import type { MockIngredient, RiskClass } from '../lib/mock-catalog'
+import type { RiskClass } from '../lib/off/types'
+
+/** Minimal shape the row needs — MockIngredient and NormalizedIngredient both fit. */
+export interface DisplayIngredient {
+  name: string
+  riskClass: RiskClass
+}
 
 /** Risk chip meta — always icon + label, never color-only (MASTER.md). */
 const RISK_META: Record<RiskClass, { label: string; Icon: LucideIcon; text: string; bg: string }> = {
@@ -14,12 +20,12 @@ const RISK_META: Record<RiskClass, { label: string; Icon: LucideIcon; text: stri
  * IngredientRow (component canon, MASTER.md): name + risk chip, tappable to
  * open the ingredient detail sheet. 44px minimum target.
  */
-export function IngredientRow({
+export function IngredientRow<T extends DisplayIngredient>({
   ingredient,
   onSelect,
 }: {
-  ingredient: MockIngredient
-  onSelect: (ingredient: MockIngredient) => void
+  ingredient: T
+  onSelect: (ingredient: T) => void
 }) {
   const meta = RISK_META[ingredient.riskClass]
   return (
