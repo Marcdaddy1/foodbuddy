@@ -47,5 +47,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+  <key>NSCameraUsageDescription</key>
+  <string>FoodBuddy uses the camera only to read product barcodes, on-device. No photos are stored or uploaded.</string>
 </dict>
 </plist>
