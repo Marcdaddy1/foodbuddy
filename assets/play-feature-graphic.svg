@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <!--
+    Google Play feature graphic (required, exactly 1024x500).
+    Play may crop the edges and overlays a play button on some surfaces, so all
+    text and the mark stay well inside the middle band.
+    No screenshots, no device frames, no "download now" — Play policy forbids
+    store-badge and CTA imagery in the feature graphic.
+  -->
+  <rect width="1024" height="500" fill="#2D5016"/>
+
+  <!-- Mark -->
+  <g transform="translate(150 250) scale(0.32) translate(-512 -512)">
+    <path d="M512 268 C 700 404, 718 618, 512 742 C 306 618, 324 404, 512 268 Z"
+          fill="#7CB342"/>
+    <path d="M512 300 L512 726" stroke="#2D5016" stroke-width="26" stroke-linecap="round"/>
+    <path d="M512 420 L620 372 M512 420 L404 372 M512 540 L648 500 M512 540 L376 500"
+          stroke="#2D5016" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.85"/>
+    <rect x="272" y="486" width="480" height="52" rx="26" fill="#FF6B35"/>
+  </g>
+
+  <!-- Wordmark + positioning line -->
+  <text x="290" y="238" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+        font-size="92" font-weight="700" fill="#FFFFFF">FoodBuddy</text>
+  <text x="292" y="306" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+        font-size="38" font-weight="400" fill="#C8E6A0">Scan it. Understand it. Buy better.</text>
+</svg>

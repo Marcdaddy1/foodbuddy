@@ -1,0 +1,114 @@
+# Builds a SIGNED Android App Bundle (.aab) for Google Play.
+#
+# Play requires an AAB (not an APK) for new apps, and every upload needs a
+# versionCode higher than the last one Play has seen. We derive versionCode from
+# the workflow run number, which only ever increases.
+#
+# Required repository secrets (Settings > Secrets and variables > Actions):
+#   ANDROID_KEYSTORE_BASE64  - the upload keystore (.jks), base64-encoded
+#   ANDROID_KEYSTORE_PASSWORD- keystore password
+#   ANDROID_KEY_ALIAS        - key alias (e.g. foodbuddy-upload)
+#   ANDROID_KEY_PASSWORD     - key password
+#   VITE_SUPABASE_URL        - baked into the web bundle at build time
+#   VITE_SUPABASE_ANON_KEY   - publishable key (safe in the client)
+# Optional: VITE_SENTRY_DSN, VITE_POSTHOG_KEY, VITE_POSTHOG_HOST
+#
+# To encode the keystore on Windows PowerShell:
+#   [Convert]::ToBase64String([IO.File]::ReadAllBytes("foodbuddy-upload.jks")) | Set-Clipboard
+
+name: Android Release AAB
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: 'Version name shown to users (e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  bundle:
+    name: Build signed AAB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Guard: never ship a release built from a red tree.
+      - name: Verify (typecheck, lint, test)
+        run: |
+          npm run typecheck
+          npm run lint
+          npm run test
+
+      - name: Build web bundle
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          VITE_POSTHOG_KEY: ${{ secrets.VITE_POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.VITE_POSTHOG_HOST }}
+        run: npm run build
+
+      - name: Sync Capacitor Android project
+        run: npx cap sync android
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Restore keystore from secrets
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 is not set — cannot produce a signed bundle."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+          cat > android/keystore.properties <<EOF
+          storeFile=upload-keystore.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+
+      - name: Assemble release bundle
+        env:
+          APP_VERSION_NAME: ${{ inputs.version_name }}
+          # Monotonic and unique per run — Play rejects reused versionCodes.
+          APP_VERSION_CODE: ${{ github.run_number }}
+        working-directory: ./android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew bundleRelease --no-daemon
+
+      # Keys must not survive the job, even on failure paths.
+      - name: Shred signing material
+        if: always()
+        run: rm -f android/upload-keystore.jks android/keystore.properties
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: foodbuddy-release-aab-v${{ inputs.version_name }}-${{ github.run_number }}
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+          if-no-files-found: error

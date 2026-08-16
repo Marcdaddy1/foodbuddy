@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!--
+    FoodBuddy adaptive-icon FOREGROUND layer.
+    All artwork stays inside the central safe zone (radius ~338px from centre):
+    Android masks adaptive icons to circles/squircles and crops anything outside.
+    Motif: leaf (food) crossed by a scan line (barcode scanning).
+  -->
+  <g>
+    <!-- Leaf body -->
+    <path d="M512 268 C 700 404, 718 618, 512 742 C 306 618, 324 404, 512 268 Z"
+          fill="#7CB342"/>
+    <!-- Midrib, cut in the deep brand green for contrast at small sizes -->
+    <path d="M512 300 L512 726" stroke="#2D5016" stroke-width="26" stroke-linecap="round"/>
+    <!-- Side veins -->
+    <path d="M512 420 L620 372 M512 420 L404 372 M512 540 L648 500 M512 540 L376 500"
+          stroke="#2D5016" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.85"/>
+    <!-- Scan line -->
+    <rect x="272" y="486" width="480" height="52" rx="26" fill="#FF6B35"/>
+  </g>
+</svg>

@@ -27,3 +27,12 @@ node_modules/
 .env
 .env.local
 *.local
+
+# Android release signing — NEVER commit these.
+# Losing the upload keystore means you can no longer update the app under the
+# same listing; leaking it lets someone else sign builds as you.
+# Keep an offline backup of the .jks and its passwords (password manager).
+*.jks
+*.keystore
+android/keystore.properties
+keystore.properties

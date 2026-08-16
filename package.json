@@ -1,7 +1,7 @@
 {
   "name": "foodbuddy",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@capacitor/android": "^8.4.1",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.4.1",
     "@capacitor/ios": "^8.4.1",
     "@tailwindcss/vite": "^4.3.2",

@@ -1,14 +1,41 @@
 apply plugin: 'com.android.application'
 
+// Release signing. Local builds read android/keystore.properties (gitignored);
+// CI writes that file from repository secrets before building. When the file is
+// absent the release build stays unsigned — debug builds are unaffected.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+def hasReleaseSigning = keystorePropertiesFile.exists()
+
+// Play requires a versionCode that strictly increases with every upload and can
+// never be reused. CI passes the run number; local builds fall back to 1.
+def appVersionName = System.getenv("APP_VERSION_NAME") ?: "1.0.0"
+def appVersionCode = (System.getenv("APP_VERSION_CODE") ?: "1") as Integer
+
 android {
     namespace = "com.aegeanpulse.foodbuddy"
     compileSdk = rootProject.ext.compileSdkVersion
+
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.aegeanpulse.foodbuddy"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -18,6 +45,13 @@ android {
     }
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
+            // Kept off for the first release: Capacitor registers plugins by
+            // reflection, so R8 needs verified keep rules. Turning this on is a
+            // post-launch task gated on a real release-build device test —
+            // R8 breakage only ever shows up at runtime, never at build time.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

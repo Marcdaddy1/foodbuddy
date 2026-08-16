@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
+  <!-- FoodBuddy splash (dark) — dark surface token from design-system/MASTER.md. -->
+  <rect width="2732" height="2732" fill="#0D110D"/>
+  <g transform="translate(1366 1366) scale(0.85) translate(-512 -512)">
+    <path d="M512 268 C 700 404, 718 618, 512 742 C 306 618, 324 404, 512 268 Z"
+          fill="#8BC34A"/>
+    <path d="M512 300 L512 726" stroke="#0D110D" stroke-width="26" stroke-linecap="round"/>
+    <path d="M512 420 L620 372 M512 420 L404 372 M512 540 L648 500 M512 540 L376 500"
+          stroke="#0D110D" stroke-width="18" stroke-linecap="round" fill="none" opacity="0.85"/>
+    <rect x="272" y="486" width="480" height="52" rx="26" fill="#FF8A5C"/>
+  </g>
+</svg>
