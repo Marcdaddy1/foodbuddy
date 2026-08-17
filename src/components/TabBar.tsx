@@ -14,11 +14,18 @@ function Tab({
     <Link
       to={to}
       activeOptions={{ exact: to === '/' }}
-      className="flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl py-1 text-ink-muted transition-colors data-[status=active]:text-brand-700"
+      className="group relative flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl py-1 text-ink-muted transition-colors data-[status=active]:text-brand-700"
       activeProps={{ 'aria-current': 'page' }}
     >
+      {/* Non-colour cue: colour alone cannot carry the active state. */}
+      <span
+        aria-hidden="true"
+        className="absolute -top-px h-0.5 w-6 rounded-full bg-transparent group-data-[status=active]:bg-brand-700"
+      />
       <Icon aria-hidden="true" size={24} strokeWidth={2} />
-      <span className="text-[11px] font-semibold leading-none">{label}</span>
+      <span className="text-[11px] font-semibold leading-none group-data-[status=active]:font-extrabold">
+        {label}
+      </span>
     </Link>
   )
 }
@@ -34,7 +41,7 @@ export function TabBar() {
       aria-label="Main"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-surface pb-[env(safe-area-inset-bottom)]"
     >
-      <div className="mx-auto grid h-16 w-full max-w-md grid-cols-5 items-center px-2">
+      <div className="mx-auto grid h-16 w-full max-w-md grid-cols-5 items-center gap-1 px-2">
         <Tab to="/" label="Home" Icon={House} />
         <Tab to="/history" label="History" Icon={History} />
         <div className="relative flex justify-center">

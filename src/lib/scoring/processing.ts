@@ -42,5 +42,9 @@ export function assessProcessing(
           },
         ]
       : []
-  return { subscore: PROCESSING_SUBSCORES[novaGroup], flags }
+  // Defensive: the type says 1–4, but this is the boundary where stale cached
+  // rows or hand-edited data enter. An unexpected value used to index to
+  // `undefined`, which became NaN in the composite and rendered as a
+  // plausible-looking grade E instead of failing visibly.
+  return { subscore: PROCESSING_SUBSCORES[novaGroup] ?? PROCESSING_SUBSCORE_UNKNOWN, flags }
 }

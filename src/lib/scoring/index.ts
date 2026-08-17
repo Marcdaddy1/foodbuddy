@@ -62,6 +62,10 @@ function sortAndDedupeFlags(flags: readonly ScoreFlag[]): ScoreFlag[] {
 }
 
 function clamp0to100(value: number): number {
+  // NaN must not survive: Math.min/max propagate it, and gradeForScore then
+  // returns 'E' (every comparison is false), which looks like a real verdict.
+  // Falling back to the neutral midpoint keeps the output in-contract.
+  if (!Number.isFinite(value)) return 50
   return Math.min(100, Math.max(0, value))
 }
 

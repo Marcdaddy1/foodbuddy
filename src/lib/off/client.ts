@@ -67,6 +67,13 @@ async function fetchOnce(
       headers: { Accept: 'application/json' },
     })
   } catch (err) {
+    // A deadline being hit is a network failure from the user's point of view,
+    // so it takes the retry + "couldn't reach Open Food Facts" path.
+    // A plain AbortError is a real cancellation (React Query unmounting the
+    // query) and must propagate untouched so nothing renders an error for it.
+    if (err instanceof DOMException && err.name === 'TimeoutError') {
+      throw new OffNetworkError(barcode, 'timed out')
+    }
     if (err instanceof DOMException && err.name === 'AbortError') throw err
     throw new OffNetworkError(barcode, err instanceof Error ? err.message : String(err))
   }

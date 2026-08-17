@@ -15,8 +15,15 @@
 // here so existing imports keep working.
 export type { RiskClass } from './off/types'
 import type { RiskClass } from './off/types'
-import { scoreProduct } from './scoring'
-import type { ScoringInput } from './scoring/types'
+import { scoreProduct, gradeForScore } from './scoring'
+import type { ScoringInput, GradeBand } from './scoring/types'
+
+// Re-exported so the band ladder has exactly ONE definition. A second copy
+// here used to drive ScoreRing, Home and History — including real Supabase
+// scores — so changing a band in the engine silently left those on the old
+// scale.
+export { gradeForScore as gradeBand }
+export type { GradeBand }
 
 export interface MockIngredient {
   name: string
@@ -42,7 +49,6 @@ export interface MockNutriments {
   salt100g: number
 }
 
-export type GradeBand = 'A' | 'B' | 'C' | 'D' | 'E'
 
 export interface MockProduct {
   barcode: string
@@ -69,15 +75,6 @@ export interface MockProduct {
   offLastFetchedAt: string
 }
 
-/** Grade band mapping per MASTER.md: A 80+, B 60–79, C 40–59, D 20–39, E <20. */
-
-export function gradeBand(score: number): GradeBand {
-  if (score >= 80) return 'A'
-  if (score >= 60) return 'B'
-  if (score >= 40) return 'C'
-  if (score >= 20) return 'D'
-  return 'E'
-}
 
 /**
  * Sample entries carry no score of their own — the score is computed below by

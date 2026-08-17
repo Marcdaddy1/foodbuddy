@@ -281,7 +281,7 @@ function ProfileScreen() {
               <button
                 type="button"
                 onClick={() => setShowDelete(true)}
-                className="mt-1 flex min-h-11 w-full items-center gap-3 rounded-xl px-1 text-left transition-colors hover:bg-danger-500/10 active:scale-[0.98]"
+                className="mt-3 flex min-h-11 w-full items-center gap-3 rounded-xl px-1 text-left transition-colors hover:bg-danger-500/10 active:scale-[0.98]"
               >
                 <Trash2 aria-hidden="true" size={20} strokeWidth={2} className="text-danger-500" />
                 <span>

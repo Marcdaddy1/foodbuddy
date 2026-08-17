@@ -76,7 +76,17 @@ function cacheProductNonBlocking(barcode: string, raw: unknown): void {
     })
 }
 
-export async function lookupProduct(barcode: string): Promise<NormalizedProduct> {
+/**
+ * Open Food Facts occasionally accepts a connection and then never responds
+ * (captive portals, tunnel handoff). Without a deadline `fetch` never settles,
+ * so the verdict screen sits on its skeleton forever with no retry affordance.
+ */
+const LOOKUP_TIMEOUT_MS = 8_000
+
+export async function lookupProduct(
+  barcode: string,
+  signal?: AbortSignal,
+): Promise<NormalizedProduct> {
   if (!isValidBarcode(barcode)) throw new ProductNotFoundError(barcode)
 
   // (a) fresh Supabase cache
@@ -87,7 +97,12 @@ export async function lookupProduct(barcode: string): Promise<NormalizedProduct>
 
   // (b) Open Food Facts direct
   try {
-    const { product, raw } = await fetchOffProduct(barcode)
+    const timeout = AbortSignal.timeout(LOOKUP_TIMEOUT_MS)
+    const combined =
+      signal && 'any' in AbortSignal
+        ? AbortSignal.any([signal, timeout])
+        : timeout
+    const { product, raw } = await fetchOffProduct(barcode, { signal: combined })
     cacheProductNonBlocking(barcode, raw)
     return product
   } catch (err) {
@@ -101,7 +116,7 @@ export async function lookupProduct(barcode: string): Promise<NormalizedProduct>
 export function useProductLookup(barcode: string): UseQueryResult<NormalizedProduct> {
   return useQuery<NormalizedProduct>({
     queryKey: ['product', barcode],
-    queryFn: () => lookupProduct(barcode),
+    queryFn: ({ signal }) => lookupProduct(barcode, signal),
     // The OFF client already does its own single backoff retry — never
     // retry-storm OFF from the query layer, and never retry a not-found.
     retry: false,

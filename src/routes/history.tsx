@@ -36,7 +36,12 @@ function dayLabel(date: Date): string {
 function HistoryScreen() {
   const [query, setQuery] = useState('')
   const { session, loading } = useAuth()
-  const { data: realScans, isPending: historyPending } = useScanHistory(session?.user.id)
+  const {
+    data: realScans,
+    isPending: historyPending,
+    isError: historyFailed,
+    refetch: refetchHistory,
+  } = useScanHistory(session?.user.id)
   const allergies = useDietaryProfileStore((s) => s.allergies)
   const intolerances = useDietaryProfileStore((s) => s.intolerances)
   const dietPatterns = useDietaryProfileStore((s) => s.dietPatterns)
@@ -132,6 +137,27 @@ function HistoryScreen() {
             <div key={i} aria-hidden="true" className="h-[76px] animate-pulse rounded-2xl bg-ink/10" />
           ))}
         </div>
+      ) : historyFailed ? (
+        // A failed load must never look like "you have no scans" — this is a
+        // safety record, and silently showing it as empty is misinformation.
+        <section
+          role="alert"
+          className="flex flex-col items-center gap-3 rounded-2xl bg-surface p-8 text-center shadow-[0_8px_32px_rgba(23,29,20,0.08)]"
+        >
+          <ScanLine aria-hidden="true" size={40} strokeWidth={2} className="text-danger-500" />
+          <h2 className="text-base font-bold text-ink">We couldn&apos;t load your history</h2>
+          <p className="text-sm text-ink-muted">
+            Your scans are safe — we just couldn&apos;t reach the server. Check your
+            connection and try again.
+          </p>
+          <button
+            type="button"
+            onClick={() => void refetchHistory()}
+            className="min-h-11 rounded-xl bg-brand-700 px-5 text-sm font-semibold text-on-brand transition-colors active:scale-[0.98]"
+          >
+            Try again
+          </button>
+        </section>
       ) : groups.length === 0 ? (
         <section className="flex flex-col items-center gap-3 rounded-2xl bg-surface p-8 text-center shadow-[0_8px_32px_rgba(23,29,20,0.08)]">
           <ScanLine aria-hidden="true" size={40} strokeWidth={2} className="text-ink-muted" />

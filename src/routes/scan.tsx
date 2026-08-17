@@ -47,7 +47,13 @@ function ScanScreen() {
   }, [navigate])
 
   function acceptPrePrompt() {
-    localStorage.setItem(PRE_PROMPT_SEEN_KEY, '1')
+    // Storage is unavailable in private-mode / storage-disabled WebViews.
+    // Failing here must not stop the user reaching the scanner.
+    try {
+      localStorage.setItem(PRE_PROMPT_SEEN_KEY, '1')
+    } catch {
+      /* explainer will show again next time — acceptable */
+    }
     setShowPrePrompt(false)
     void launchScanner()
   }
@@ -56,7 +62,13 @@ function ScanScreen() {
   useEffect(() => {
     if (!nativeAvailable || autoLaunched.current) return
     autoLaunched.current = true
-    if (localStorage.getItem(PRE_PROMPT_SEEN_KEY)) {
+    let seen = false
+    try {
+      seen = Boolean(localStorage.getItem(PRE_PROMPT_SEEN_KEY))
+    } catch {
+      seen = false
+    }
+    if (seen) {
       void launchScanner()
     } else {
       setShowPrePrompt(true)

@@ -96,12 +96,18 @@ function nutrientDisplayRows(n: NutrimentsPer100): NutrientDisplayRow[] {
 }
 
 function CategoryBar({ label, value }: { label: string; value: number }) {
+  // Good/mediocre/poor was encoded in hue alone. The three verdict colours sit
+  // at near-identical lightness, so a deuteranope cannot separate them — the
+  // word carries the judgement, the colour only reinforces it.
   const tone = value >= 60 ? 'bg-verdict-safe' : value >= 40 ? 'bg-verdict-caution' : 'bg-verdict-avoid'
+  const quality = value >= 60 ? 'Good' : value >= 40 ? 'Mixed' : 'Poor'
   return (
     <div>
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-baseline justify-between gap-2">
         <span className="text-sm font-medium text-ink">{label}</span>
-        <span className="text-sm font-semibold tabular-nums text-ink-muted">{value}/100</span>
+        <span className="text-sm font-semibold tabular-nums text-ink-muted">
+          <span className="font-bold text-ink">{quality}</span> · {value}/100
+        </span>
       </div>
       <div
         role="progressbar"
@@ -253,6 +259,7 @@ export function ProductVerdictScreen({ barcode }: { barcode: string }) {
   const intolerances = useDietaryProfileStore((s) => s.intolerances)
   const dietPatterns = useDietaryProfileStore((s) => s.dietPatterns)
   const customAvoid = useDietaryProfileStore((s) => s.customAvoid)
+  const hydration = useDietaryProfileStore((s) => s.hydration)
   const [selected, setSelected] = useState<NormalizedIngredient | null>(null)
   const invalidateScanHistory = useInvalidateScanHistory()
 
@@ -316,6 +323,31 @@ export function ProductVerdictScreen({ barcode }: { barcode: string }) {
         </p>
       )}
 
+      {hydration === 'failed' && (
+        // Without the stored profile we cannot personalise anything, and an
+        // empty profile makes every product read "Safe for you". Say so loudly
+        // rather than letting a default-safe verdict stand.
+        <div
+          role="alert"
+          className="rounded-2xl border border-verdict-caution/40 bg-verdict-caution/10 p-4"
+        >
+          <p className="text-sm font-bold text-verdict-caution">
+            We couldn&apos;t load your dietary profile
+          </p>
+          <p className="mt-1 text-sm text-ink-muted">
+            This verdict is <strong>not personalised</strong> — it does not account for
+            your allergies. Open Profile to check your settings, and read the physical
+            label.
+          </p>
+          <Link
+            to="/profile"
+            className="mt-3 inline-flex min-h-11 items-center rounded-xl bg-brand-700 px-4 text-sm font-semibold text-on-brand"
+          >
+            Open profile
+          </Link>
+        </div>
+      )}
+
       <VerdictBanner verdict={verdictResult.verdict} rule={verdictResult.rule} />
 
       <section className="flex items-center gap-4 rounded-2xl bg-surface p-4 shadow-[0_8px_32px_rgba(23,29,20,0.08)]">
@@ -370,7 +402,7 @@ export function ProductVerdictScreen({ barcode }: { barcode: string }) {
         {product.ingredients.length > 0 ? (
           <>
             <p className="mt-0.5 text-xs text-ink-muted">Tap an ingredient for details.</p>
-            <ul className="mt-2 flex flex-col">
+            <ul className="mt-2 flex flex-col gap-1">
               {product.ingredients.map((ingredient, index) => (
                 <li key={`${ingredient.name}-${index}`}>
                   <IngredientRow ingredient={ingredient} onSelect={setSelected} />
