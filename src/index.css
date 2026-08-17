@@ -17,6 +17,8 @@
   /* Text that sits ON brand/accent fills (kept AA in both modes) */
   --color-on-brand: #ffffff;
   --color-on-accent: #2b1204;
+  /* Text/icons on a solid danger fill. White fails on both danger values. */
+  --color-on-danger: #ffffff;
 
   /* Surfaces */
   --color-surface: #ffffff; /* cards, sheets */
@@ -27,12 +29,12 @@
   --color-ink-muted: #4a5546; /* text muted, >=4.6:1 */
 
   /* States */
-  --color-danger-500: #e53e3e;
+  --color-danger-500: #b91c1c;
 
   /* Verdict tokens: Safe / Caution / Avoid (icon + label + tinted bg, never color-only) */
-  --color-verdict-safe: #2f7d32;
-  --color-verdict-caution: #b45309;
-  --color-verdict-avoid: #c62828;
+  --color-verdict-safe: #1b5e20;
+  --color-verdict-caution: #8a4404;
+  --color-verdict-avoid: #a71d1d;
 
   /* Typography: Inter for headings; system stack for body */
   --font-heading:
@@ -50,6 +52,7 @@
     --color-brand-400: #8bc34a;
     --color-accent-500: #ff8a5c;
     --color-on-brand: #1c2a0e;
+    --color-on-danger: #2b1010;
     --color-surface: #151915;
     --color-surface-muted: #0d110d;
     --color-ink: #ecf2e8;

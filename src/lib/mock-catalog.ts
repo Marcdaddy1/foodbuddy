@@ -15,6 +15,8 @@
 // here so existing imports keep working.
 export type { RiskClass } from './off/types'
 import type { RiskClass } from './off/types'
+import { scoreProduct } from './scoring'
+import type { ScoringInput } from './scoring/types'
 
 export interface MockIngredient {
   name: string
@@ -55,9 +57,9 @@ export interface MockProduct {
   allergenTags: string[]
   /** "May contain traces of…" allergens (OFF taxonomy tags). */
   mayContainTags: string[]
-  /** PLACEHOLDER 0–100 health score — Phase 1 computes this deterministically. */
+  /** 0–100 health score, computed by the real scoring engine (see below). */
   score: number
-  /** PLACEHOLDER per-category sub-scores (0–100) shown in the breakdown. */
+  /** Per-category sub-scores (0–100) shown in the breakdown. */
   categoryScores: {
     nutrition: number
     additives: number
@@ -68,6 +70,7 @@ export interface MockProduct {
 }
 
 /** Grade band mapping per MASTER.md: A 80+, B 60–79, C 40–59, D 20–39, E <20. */
+
 export function gradeBand(score: number): GradeBand {
   if (score >= 80) return 'A'
   if (score >= 60) return 'B'
@@ -76,7 +79,14 @@ export function gradeBand(score: number): GradeBand {
   return 'E'
 }
 
-export const MOCK_PRODUCTS: MockProduct[] = [
+/**
+ * Sample entries carry no score of their own — the score is computed below by
+ * the real scoring engine, so the sample data can never drift away from what a
+ * user sees on the actual verdict screen.
+ */
+type MockProductSeed = Omit<MockProduct, 'score' | 'categoryScores'>
+
+const MOCK_SEEDS: MockProductSeed[] = [
   {
     barcode: '3017620422003',
     name: 'Nutella',
@@ -167,8 +177,6 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     novaGroup: 4,
     allergenTags: ['en:milk', 'en:nuts', 'en:soybeans'],
     mayContainTags: [],
-    score: 22,
-    categoryScores: { nutrition: 12, additives: 45, processing: 15 },
     offLastFetchedAt: '2026-07-01',
   },
   {
@@ -241,8 +249,6 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     novaGroup: 4,
     allergenTags: [],
     mayContainTags: [],
-    score: 30,
-    categoryScores: { nutrition: 25, additives: 30, processing: 15 },
     offLastFetchedAt: '2026-07-02',
   },
   {
@@ -314,8 +320,6 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     novaGroup: 3,
     allergenTags: ['en:celery'],
     mayContainTags: [],
-    score: 48,
-    categoryScores: { nutrition: 40, additives: 70, processing: 45 },
     offLastFetchedAt: '2026-06-28',
   },
   {
@@ -357,8 +361,6 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     novaGroup: 1,
     allergenTags: ['en:gluten'],
     mayContainTags: ['en:soybeans'],
-    score: 82,
-    categoryScores: { nutrition: 75, additives: 100, processing: 95 },
     offLastFetchedAt: '2026-07-03',
   },
   {
@@ -441,11 +443,40 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     novaGroup: 4,
     allergenTags: ['en:gluten', 'en:soybeans'],
     mayContainTags: ['en:milk'],
-    score: 25,
-    categoryScores: { nutrition: 18, additives: 40, processing: 15 },
     offLastFetchedAt: '2026-06-30',
   },
 ]
+
+/** Maps the sample shape onto the scoring engine's input contract. */
+function seedToScoringInput(seed: MockProductSeed): ScoringInput {
+  return {
+    nutriments: {
+      energyKcal: seed.nutriments.energyKcal100g,
+      fat: seed.nutriments.fat100g,
+      saturatedFat: seed.nutriments.saturatedFat100g ?? null,
+      carbohydrates: seed.nutriments.carbohydrates100g,
+      sugars: seed.nutriments.sugars100g,
+      proteins: seed.nutriments.proteins100g,
+      salt: seed.nutriments.salt100g,
+      fiber: null,
+    },
+    novaGroup: seed.novaGroup,
+    // Sample entries do not carry E-number tags; the additive subscore is
+    // therefore optimistic for these five. Real products go through the OFF
+    // normalizer, which supplies additives_tags properly.
+    additiveTags: [],
+    categories: seed.categories,
+  }
+}
+
+export const MOCK_PRODUCTS: MockProduct[] = MOCK_SEEDS.map((seed) => {
+  const result = scoreProduct(seedToScoringInput(seed))
+  return {
+    ...seed,
+    score: result.score,
+    categoryScores: result.breakdown,
+  }
+})
 
 export function findProduct(barcode: string): MockProduct | undefined {
   return MOCK_PRODUCTS.find((p) => p.barcode === barcode)

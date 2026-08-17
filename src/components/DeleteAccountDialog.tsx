@@ -103,7 +103,7 @@ export function DeleteAccountDialog({ email, onCancel, onDeleted }: Props) {
             type="button"
             onClick={() => void handleDelete()}
             disabled={!confirmed || busy}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-danger-500 px-5 text-base font-semibold text-white transition-colors active:scale-[0.98] disabled:opacity-50"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-danger-500 px-5 text-base font-semibold text-on-danger transition-colors active:scale-[0.98] disabled:opacity-50"
           >
             {busy && (
               <Loader2

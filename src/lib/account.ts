@@ -38,14 +38,14 @@ export async function deleteAccount(): Promise<AccountActionResult> {
     return { ok: false, message: 'Not connected to the server. Try again later.' }
   }
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-  if (!session) {
-    return { ok: false, message: 'You are not signed in.' }
-  }
-
   try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (!session) {
+      return { ok: false, message: 'You are not signed in.' }
+    }
+
     const { error } = await supabase.functions.invoke('delete-account', {
       method: 'POST',
     })
@@ -73,6 +73,18 @@ export async function deleteAccount(): Promise<AccountActionResult> {
   return { ok: true }
 }
 
+/** Reads the device-local dietary profile for inclusion in a data export. */
+function readLocalDietaryProfile(): unknown {
+  try {
+    const raw = localStorage.getItem(DIETARY_PROFILE_STORAGE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as { state?: unknown }
+    return parsed.state ?? null
+  } catch {
+    return null
+  }
+}
+
 export interface ExportedData {
   exportedAt: string
   account: { id: string; email: string | null }
@@ -95,16 +107,16 @@ export async function exportMyData(): Promise<
     return { ok: false, message: 'Not connected to the server. Try again later.' }
   }
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-  if (!session) {
-    return { ok: false, message: 'You are not signed in.' }
-  }
-
-  const userId = session.user.id
-
   try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    if (!session) {
+      return { ok: false, message: 'You are not signed in.' }
+    }
+
+    const userId = session.user.id
+
     const [profile, dietary, history, favorites, lists] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
       supabase.from('dietary_profiles').select('*').eq('user_id', userId).maybeSingle(),
@@ -124,7 +136,11 @@ export async function exportMyData(): Promise<
         exportedAt: new Date().toISOString(),
         account: { id: userId, email: session.user.email ?? null },
         profile: profile.data ?? null,
-        dietaryProfile: dietary.data ?? null,
+        // The dietary profile currently lives in localStorage, not in the
+        // `dietary_profiles` table (server sync lands in Phase 2). Reading only
+        // the table made the export silently omit the most sensitive category
+        // it claims to cover, which would not satisfy GDPR Art. 20.
+        dietaryProfile: dietary.data ?? readLocalDietaryProfile(),
         scanHistory: history.data ?? [],
         favorites: favorites.data ?? [],
         lists: lists.data ?? [],

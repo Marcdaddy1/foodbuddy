@@ -8,5 +8,9 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    // The render tests pull in the scoring engine and its data tables. On a
+    // cold module cache (every CI run) that pushed them past the 5s default
+    // and made the suite flaky; 15s is still fast enough to catch a hang.
+    testTimeout: 15_000,
   },
 })

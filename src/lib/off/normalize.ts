@@ -135,8 +135,13 @@ export function nutrimentsFromOff(raw: unknown): NutrimentsPer100 {
 const ALLERGEN_KEYWORDS: ReadonlyArray<readonly [RegExp, string]> = [
   [/peanut|arachide|groundnut/i, 'en:peanuts'],
   [/hazelnut|almond|walnut|cashew|pistachio|pecan|macadamia|brazil.nut|tree.nut|\bnuss|noisette|\bnuts?\b/i, 'en:nuts'],
-  [/milk|lactose|whey|casein|butter|cream\b|yogurt|yoghurt|cheese|milch|lait/i, 'en:milk'],
-  [/wheat|gluten|barley|rye\b|spelt|semolina|kamut|malt\b|weizen|bl[eé]\b/i, 'en:gluten'],
+  // Negative lookbehind keeps plant-based lookalikes out: cocoa/shea/nut butter,
+  // oat/almond/soy/coconut milk, butternut squash, cream of tartar.
+  [/(?<!cocoa )(?<!shea )(?<!peanut )(?<!nut )(?<!almond )butter(?!nut)|(?<!oat )(?<!almond )(?<!soy )(?<!soya )(?<!coconut )(?<!rice )(?<!plant )milk|lactose|whey|casein|cream(?! of tartar)\b|yogurt|yoghurt|cheese|milch|\blait\b/i, 'en:milk'],
+  // `blé` needs a LEADING boundary too: without it, /bl[eé]\b/ matched the tail
+  // of ordinary English words — "vegetable oil", "edible starch", and
+  // "soluble fibre" all flagged as gluten, which is alarm fatigue at scale.
+  [/wheat|gluten|barley|rye\b|spelt|semolina|kamut|malt\b|weizen|(?<![a-z])bl[eé](?![a-z])|durum|couscous|bulgur|seitan|farro|triticale/i, 'en:gluten'],
   [/\bsoy\b|soya|soja|soybean|edamame|tofu/i, 'en:soybeans'],
   [/\begg|albumin|œuf|\bei\b/i, 'en:eggs'],
   [/crustacean|shrimp|prawn|crab\b|lobster|crayfish/i, 'en:crustaceans'],

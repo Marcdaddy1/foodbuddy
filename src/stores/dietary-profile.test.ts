@@ -73,7 +73,9 @@ describe('deriveVerdict', () => {
       product(BARILLA),
       profile({
         allergies: [
-          { tag: 'en:soybeans', severity: 'severe' },
+          // Non-severe on purpose: a SEVERE traces allergy now escalates to
+          // Avoid in its own right, which would make this ordering test vacuous.
+          { tag: 'en:soybeans', severity: 'moderate' },
           { tag: 'en:gluten', severity: 'mild' },
         ],
       }),
@@ -125,13 +127,24 @@ describe('deriveVerdict with NormalizedProduct-shaped input (real OFF data)', ()
     }
   }
 
-  it('OFF tracesTags with a declared allergy => Caution', () => {
+  it('OFF tracesTags with a non-severe declared allergy => Caution', () => {
+    const result = deriveVerdict(
+      normalizedProduct({ tracesTags: ['en:milk'] }),
+      profile({ allergies: [{ tag: 'en:milk', severity: 'moderate' }] }),
+    )
+    expect(result.verdict).toBe('caution')
+    expect(result.rule).toMatch(/may contain traces of milk/i)
+  })
+
+  it('OFF tracesTags with a SEVERE declared allergy => Avoid', () => {
+    // Clinical guidance for anaphylactic allergy is to avoid precautionary
+    // "may contain" labelling outright, so severity has to move the verdict.
     const result = deriveVerdict(
       normalizedProduct({ tracesTags: ['en:milk'] }),
       profile({ allergies: [{ tag: 'en:milk', severity: 'severe' }] }),
     )
-    expect(result.verdict).toBe('caution')
-    expect(result.rule).toMatch(/may contain traces of milk/i)
+    expect(result.verdict).toBe('avoid')
+    expect(result.rule).toMatch(/severe/i)
   })
 
   it('product-level allergen tag alone (no ingredient rows) => Avoid with rule text', () => {
@@ -170,7 +183,7 @@ describe('deriveVerdict with NormalizedProduct-shaped input (real OFF data)', ()
       normalizedProduct({ allergenTags: ['en:gluten'], tracesTags: ['en:soybeans'] }),
       profile({
         allergies: [
-          { tag: 'en:soybeans', severity: 'severe' },
+          { tag: 'en:soybeans', severity: 'moderate' },
           { tag: 'en:gluten', severity: 'mild' },
         ],
       }),

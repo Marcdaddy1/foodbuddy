@@ -5,6 +5,7 @@ vi.mock('posthog-js', () => ({
     init: vi.fn(),
     capture: vi.fn(),
     opt_out_capturing: vi.fn(),
+    opt_in_capturing: vi.fn(),
   },
 }))
 
