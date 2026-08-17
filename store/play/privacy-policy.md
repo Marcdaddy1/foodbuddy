@@ -1,26 +1,33 @@
 # FoodBuddy Privacy Policy
 
-**Draft — fill the `{{placeholders}}` and have it reviewed before publishing.**
-This is a legal document that Play, the UK ICO, and EU regulators can hold you
-to. It is written to match what the app actually does today; re-check it at
-Phase 3 (AI explanations) and Phase 4 (shared lists, push).
+**Live.** Published at https://marcdaddy1.github.io/foodbuddy/privacy/ and
+declared to Google Play. This is a legal document that Play, the UK ICO, and EU
+regulators can hold you to, so it is written to match what the app actually
+does today — re-check it at Phase 3 (AI explanations) and Phase 4 (shared
+lists, push notifications).
 
-Publish it at a stable public URL — it must be reachable **without installing
-the app** and without logging in. Options: a page on `aegeanpulse.com`, or
-GitHub Pages from this repo.
+Company details satisfy the Companies Act 2006 website-disclosure duty
+(registered name, number, and registered office).
+
+⚠️ **This document states that Sentry processes data in the European Union.**
+Sentry is not configured yet — when you create the organisation you MUST pick
+the EU region, or this statement becomes false and the Data Safety declaration
+with it.
+
+Regenerate the published page after any edit: `node scripts/build-public-pages.mjs`
 
 ---
 
-**Last updated:** {{last_updated_date}}
-**Effective:** {{effective_date}}
+**Last updated:** 17 August 2026
+**Effective:** 17 August 2026
 
 ## Who we are
 
-FoodBuddy ("the app") is provided by {{legal_entity_name}}, {{registered_address}}.
+FoodBuddy ("the app") is provided by AEGEANPULSE LIMITED (registered in England and Wales, company number 15967719), 85 First Floor, Great Portland Street, London, W1W 7LT, United Kingdom.
 For UK GDPR and EU GDPR purposes we are the **data controller** for the personal
 data described below.
 
-Questions, requests, or complaints: **{{support_email}}**
+Questions, requests, or complaints: **contact@aegeanpulse.com**
 
 ## The short version
 
@@ -81,7 +88,7 @@ We use these service providers, who process data strictly on our instructions:
 | Provider | What they handle | Where |
 |---|---|---|
 | Supabase | Account, dietary profile, history, lists | European Union |
-| Sentry | Crash and performance diagnostics | {{sentry_region}} |
+| Sentry | Crash and performance diagnostics | European Union |
 | PostHog | Product analytics, only if you consent | European Union |
 | Open Food Facts | Receives the barcode you scanned, with no information about you | European Union |
 | OpenAI *(planned)* | Receives ingredient names only, never anything about you | United States |
@@ -117,7 +124,7 @@ Under UK and EU data protection law you can ask us to: access your data; correct
 it; delete it; restrict or object to how we use it; provide it in a portable
 format (the app has an export function); and withdraw consent at any time.
 
-Contact **{{support_email}}**. We respond within one month.
+Contact **contact@aegeanpulse.com**. We respond within one month.
 
 If you are unhappy with our response, you can complain to the UK Information
 Commissioner's Office (ico.org.uk) or your local EU supervisory authority.

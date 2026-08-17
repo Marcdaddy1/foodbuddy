@@ -158,7 +158,11 @@ ${footerHtml}
 
 // ---- Privacy policy -------------------------------------------------------
 
+// Normalise line endings first: this repo is edited on Windows, so the source
+// file can be CRLF, while every separator and heading match below assumes LF.
 const policyMd = readFileSync(resolve(root, 'store/play/privacy-policy.md'), 'utf8')
+  .split('\r\n')
+  .join('\n')
 const marker = policyMd.indexOf('\n---\n')
 if (marker === -1) {
   throw new Error('privacy-policy.md: expected a "---" separator after the drafting notes')

@@ -133,7 +133,7 @@ Product data from Open Food Facts, used under the Open Database Licence
 
 | Field | Value |
 |---|---|
-| Support email | `{{support_email}}` — a monitored address; Play publishes it |
+| Support email | `contact@aegeanpulse.com` — a monitored address; Play publishes it |
 | Website | `https://marcdaddy1.github.io/foodbuddy/` |
 | Privacy policy URL | `https://marcdaddy1.github.io/foodbuddy/privacy/` — must be live before submitting |
 
