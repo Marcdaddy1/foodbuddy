@@ -310,6 +310,27 @@ interface DietaryProfileState extends VerdictInput {
   removeCustomAvoid: (term: string) => void
 }
 
+/**
+ * Repairs a persisted profile into a shape the app can safely render.
+ * Applied on EVERY load, not just on a version change: a malformed entry in a
+ * current-version profile would otherwise reach `allergenLabel` and throw.
+ */
+function sanitizeProfile(raw: Partial<VerdictInput> | undefined): VerdictInput {
+  const strings = (v: unknown): string[] =>
+    Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []
+  return {
+    allergies: Array.isArray(raw?.allergies)
+      ? raw.allergies.filter(
+          (a): a is AllergyEntry =>
+            !!a && typeof a === 'object' && typeof (a as AllergyEntry).tag === 'string',
+        )
+      : [],
+    intolerances: strings(raw?.intolerances),
+    dietPatterns: strings(raw?.dietPatterns),
+    customAvoid: strings(raw?.customAvoid),
+  }
+}
+
 export const DIETARY_PROFILE_STORAGE_KEY = 'foodbuddy-dietary-profile'
 
 export const useDietaryProfileStore = create<DietaryProfileState>()(
@@ -375,38 +396,21 @@ export const useDietaryProfileStore = create<DietaryProfileState>()(
       // Without a migrate fn, zustand DISCARDS state whose version differs and
       // silently continues with an empty profile. For allergy data that is a
       // safety failure, so every shape is repaired rather than dropped.
-      migrate: (persisted) => {
-        const raw = (persisted ?? {}) as Partial<VerdictInput>
-        const strings = (v: unknown): string[] =>
-          Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []
-        return {
-          allergies: Array.isArray(raw.allergies)
-            ? raw.allergies.filter(
-                (a): a is AllergyEntry =>
-                  !!a && typeof a === 'object' && typeof (a as AllergyEntry).tag === 'string',
-              )
-            : [],
-          intolerances: strings(raw.intolerances),
-          dietPatterns: strings(raw.dietPatterns),
-          customAvoid: strings(raw.customAvoid),
-        }
-      },
+      migrate: (persisted) => sanitizeProfile(persisted as Partial<VerdictInput>),
 
       onRehydrateStorage: () => (state, error) => {
-        if (error || !state) {
-          // Corrupt/unreadable storage. Surface it — do not pretend the user
-          // simply has no allergies.
-          useDietaryProfileStore.setState({ hydration: 'failed' })
-          return
-        }
-        // Repair any field that survived in the wrong shape.
-        useDietaryProfileStore.setState({
-          hydration: 'ready',
-          allergies: Array.isArray(state.allergies) ? state.allergies : [],
-          intolerances: Array.isArray(state.intolerances) ? state.intolerances : [],
-          dietPatterns: Array.isArray(state.dietPatterns) ? state.dietPatterns : [],
-          customAvoid: Array.isArray(state.customAvoid) ? state.customAvoid : [],
-        })
+        // Rehydration runs synchronously inside create(), so the store const is
+        // still in its temporal dead zone here — touching it directly throws a
+        // ReferenceError that zustand swallows, and the status silently never
+        // updates. Defer past creation.
+        const next: Partial<DietaryProfileState> =
+          error || !state
+            ? // Corrupt/unreadable storage. Surface it — never pretend the user
+              // simply has no allergies, because an empty profile makes every
+              // product read "Safe for you".
+              { hydration: 'failed' }
+            : { hydration: 'ready', ...sanitizeProfile(state) }
+        queueMicrotask(() => useDietaryProfileStore.setState(next))
       },
     },
   ),
