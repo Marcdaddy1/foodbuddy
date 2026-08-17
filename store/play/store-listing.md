@@ -17,20 +17,35 @@ Compliance constraints baked into this copy (do not "improve" them away):
 
 ## App name (30 char max)
 
+> ⛔ **UNDECIDED — do not paste this field yet.** Two names have already
+> collided:
+>
+> - **"FoodBuddy"** — a takeaway-ordering app holds it on Play
+>   (`com.epostechnologies.foodbuddy`), and a scanner ships under
+>   `com.bytes_and_pixels.food_buddy` branded "Labeless".
+> - **"FoodInsight"** — actively held on the App Store by ESADEV SOLUTIONS LLC
+>   (Health & Fitness, updated Aug 2026). Apple is strict about confusingly
+>   similar names inside a category.
+>
+> Before adopting a third name, clear it against Google Play, the App Store,
+> UK IPO, EUIPO, USPTO (class 9 and class 42) and domain availability — all of
+> them, **before** any icon, wordmark or listing work. The category is crowded
+> with descriptive "Food X" compounds, which are both the most contested names
+> and the weakest trademarks; a coined word (as Yuka did) sidesteps the whole
+> problem.
+>
+> The display name is **free to change at any time**, including after launch.
+
 ```
-FoodBuddy: Food Scanner
+{{app_display_name}}: Food Scanner
 ```
 
-23 characters.
+Budget 30 characters including the suffix.
 
-> **Name risk — decide before launch.** A takeaway-ordering app called "Food
-> Buddy" already exists on Play (`com.epostechnologies.foodbuddy`), and a food
-> scanner ships under the package `com.bytes_and_pixels.food_buddy` while
-> branded "Labeless". Play permits duplicate display names, but a trademark
-> holder can force removal at any time. Run a UK IPO + EUIPO search before
-> investing in the brand. Your **applicationId `com.aegeanpulse.foodbuddy` is
-> permanent from the first upload** — the display name can change later, the
-> package ID never can.
+> ✅ **The package ID is already settled and is deliberately brand-neutral:**
+> `com.aegeanpulse.foodscanner`. It is permanent from the first upload and can
+> never be changed, so it was chosen to describe what the app does rather than
+> what it is called — a future rename costs nothing. Users never see it.
 
 ## Short description (80 char max)
 

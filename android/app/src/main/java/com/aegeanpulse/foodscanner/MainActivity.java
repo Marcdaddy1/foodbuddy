@@ -1,4 +1,4 @@
-package com.aegeanpulse.foodbuddy;
+package com.aegeanpulse.foodscanner;
 
 import com.getcapacitor.BridgeActivity;
 
