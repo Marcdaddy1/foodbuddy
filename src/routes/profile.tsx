@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Plus, X, LogIn, ChevronRight } from 'lucide-react'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { Plus, X, LogIn, ChevronRight, Download, Trash2 } from 'lucide-react'
+import { DeleteAccountDialog } from '../components/DeleteAccountDialog'
+import { downloadJson, exportMyData } from '../lib/account'
 import {
   ALLERGEN_OPTIONS,
   DIET_PATTERN_OPTIONS,
@@ -18,7 +20,7 @@ export const Route = createFileRoute('/profile')({
 })
 
 /** Keep in sync with package.json — surfaced here until Capacitor App.getInfo() wires in. */
-const APP_VERSION = '0.0.0'
+const APP_VERSION = '1.0.0'
 
 function SectionCard({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -56,7 +58,12 @@ function TogglePill({
 }
 
 function ProfileScreen() {
+  const navigate = useNavigate()
   const { session, loading, isConfigured, signOut } = useAuth()
+  const [showDelete, setShowDelete] = useState(false)
+  const [exportState, setExportState] = useState<
+    { status: 'idle' | 'working' } | { status: 'error' | 'done'; message: string }
+  >({ status: 'idle' })
   const consent = useConsentStore((s) => s.analyticsConsent)
   const grantConsent = useConsentStore((s) => s.grant)
   const denyConsent = useConsentStore((s) => s.deny)
@@ -78,6 +85,25 @@ function ProfileScreen() {
     event.preventDefault()
     addCustomAvoid(avoidInput)
     setAvoidInput('')
+  }
+
+  async function handleExport() {
+    setExportState({ status: 'working' })
+    const result = await exportMyData()
+    if (!result.ok) {
+      setExportState({ status: 'error', message: result.message })
+      return
+    }
+    const saved = downloadJson('foodbuddy-my-data.json', result.data)
+    setExportState(
+      saved
+        ? { status: 'done', message: 'Downloaded as foodbuddy-my-data.json.' }
+        : {
+            status: 'error',
+            message:
+              'Your browser blocked the download. Try again from the web version, or email support for a copy.',
+          },
+    )
   }
 
   return (
@@ -210,17 +236,64 @@ function ProfileScreen() {
         {loading ? (
           <p className="text-sm text-ink-muted">Checking your session…</p>
         ) : session ? (
-          <div className="flex items-center justify-between gap-3">
-            <p className="min-w-0 truncate text-sm text-ink">
-              Signed in as <span className="font-semibold">{session.user.email}</span>
-            </p>
-            <button
-              type="button"
-              className="min-h-11 shrink-0 rounded-xl px-3 text-sm font-semibold text-danger-500 transition-colors hover:bg-danger-500/10 active:scale-[0.98]"
-              onClick={() => void signOut()}
-            >
-              Sign out
-            </button>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-3">
+              <p className="min-w-0 truncate text-sm text-ink">
+                Signed in as <span className="font-semibold">{session.user.email}</span>
+              </p>
+              <button
+                type="button"
+                className="min-h-11 shrink-0 rounded-xl px-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-700/10 active:scale-[0.98]"
+                onClick={() => void signOut()}
+              >
+                Sign out
+              </button>
+            </div>
+
+            <div className="border-t border-ink/10 pt-3">
+              <button
+                type="button"
+                disabled={exportState.status === 'working'}
+                onClick={() => void handleExport()}
+                className="flex min-h-11 w-full items-center gap-3 rounded-xl px-1 text-left transition-colors hover:bg-surface-muted active:scale-[0.98] disabled:opacity-60"
+              >
+                <Download aria-hidden="true" size={20} strokeWidth={2} className="text-brand-700" />
+                <span>
+                  <span className="block text-sm font-semibold text-ink">
+                    {exportState.status === 'working' ? 'Preparing your data…' : 'Export my data'}
+                  </span>
+                  <span className="block text-xs text-ink-muted">
+                    Downloads everything on your account as a JSON file.
+                  </span>
+                </span>
+              </button>
+              {(exportState.status === 'error' || exportState.status === 'done') && (
+                <p
+                  role="status"
+                  className={`mt-1 px-1 text-xs font-medium ${
+                    exportState.status === 'error' ? 'text-danger-500' : 'text-verdict-safe'
+                  }`}
+                >
+                  {exportState.message}
+                </p>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setShowDelete(true)}
+                className="mt-1 flex min-h-11 w-full items-center gap-3 rounded-xl px-1 text-left transition-colors hover:bg-danger-500/10 active:scale-[0.98]"
+              >
+                <Trash2 aria-hidden="true" size={20} strokeWidth={2} className="text-danger-500" />
+                <span>
+                  <span className="block text-sm font-semibold text-danger-500">
+                    Delete my account
+                  </span>
+                  <span className="block text-xs text-ink-muted">
+                    Permanently removes your account and all its data.
+                  </span>
+                </span>
+              </button>
+            </div>
           </div>
         ) : (
           <Link
@@ -280,7 +353,18 @@ function ProfileScreen() {
         </div>
       </SectionCard>
 
-      <p className="pb-2 text-center text-xs text-ink-muted">FoodBuddy v{APP_VERSION} · UI preview build</p>
+      <p className="pb-2 text-center text-xs text-ink-muted">FoodBuddy v{APP_VERSION}</p>
+
+      {showDelete && (
+        <DeleteAccountDialog
+          email={session?.user.email ?? null}
+          onCancel={() => setShowDelete(false)}
+          onDeleted={() => {
+            setShowDelete(false)
+            void navigate({ to: '/' })
+          }}
+        />
+      )}
     </div>
   )
 }

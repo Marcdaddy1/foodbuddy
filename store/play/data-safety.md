@@ -93,10 +93,10 @@ Because the app lets users create an account, Play requires **both**:
    app. This URL is entered in the Data Safety form.
 
 ```
-Delete account URL: {{deletion_url}}
+Delete account URL: https://marcdaddy1.github.io/foodbuddy/delete-account/
 ```
 
-> ⛔ **Neither exists yet.** This is a hard submission blocker, not a
+> ✅ **Both now exist.** This is a hard submission blocker, not a
 > nice-to-have — see the launch checklist. Supabase has no client-side user
 > deletion API, so the in-app path needs an Edge Function using the service-role
 > key to call `auth.admin.deleteUser`, with the database cascade removing

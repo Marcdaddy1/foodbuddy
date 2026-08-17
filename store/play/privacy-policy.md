@@ -106,7 +106,7 @@ safety of our users.
 You can delete your account and all associated personal data:
 
 - **In the app:** Profile → Account → Delete account.
-- **On the web:** {{deletion_url}}
+- **On the web:** https://marcdaddy1.github.io/foodbuddy/delete-account/
 
 Deletion is permanent and removes your profile, dietary data, scan history,
 lists, favourites, and notes. It is not a deactivation.

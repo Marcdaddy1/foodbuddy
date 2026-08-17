@@ -119,8 +119,8 @@ Product data from Open Food Facts, used under the Open Database Licence
 | Field | Value |
 |---|---|
 | Support email | `{{support_email}}` — a monitored address; Play publishes it |
-| Website | `{{marketing_url}}` |
-| Privacy policy URL | `{{privacy_policy_url}}` — must be live before submitting |
+| Website | `https://marcdaddy1.github.io/foodbuddy/` |
+| Privacy policy URL | `https://marcdaddy1.github.io/foodbuddy/privacy/` — must be live before submitting |
 
 > Play displays the support email publicly. Use a role address
 > (e.g. support@aegeanpulse.com), not a personal inbox.
